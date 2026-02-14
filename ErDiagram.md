@@ -1,7 +1,7 @@
-# ER Diagram — NexaRetail
+# ER Diagram — TechSpark
 
 ## Overview
-This Entity-Relationship diagram defines the database schema for the NexaRetail E-commerce platform, including tables for users, products, orders, and their relationships.
+Database schema for the TechSpark exclusive gadget marketplace.
 
 ---
 
@@ -11,57 +11,35 @@ erDiagram
         uuid id PK
         string name
         string email UK
-        string password_hash
         enum role "CUSTOMER | VENDOR | ADMIN"
-        timestamp created_at
     }
 
-    PRODUCTS {
+    GADGETS {
         uuid id PK
-        string name
-        string description
+        string model_name
+        text specs
         decimal price
-        int stock_qty
+        int stock
         uuid vendor_id FK
-        uuid category_id FK
-    }
-
-    CATEGORIES {
-        uuid id PK
-        string name
-        string description
     }
 
     ORDERS {
         uuid id PK
         uuid customer_id FK
-        decimal total_amount
-        enum status "PENDING | PROCESSING | SHIPPED | DELIVERED | CANCELLED"
-        timestamp order_date
+        decimal total_price
+        string status
+        timestamp created_at
     }
 
     ORDER_ITEMS {
         uuid id PK
         uuid order_id FK
-        uuid product_id FK
+        uuid gadget_id FK
         int quantity
-        decimal unit_price
     }
 
-    REVIEWS {
-        uuid id PK
-        uuid customer_id FK
-        uuid product_id FK
-        int rating
-        text comment
-        timestamp created_at
-    }
-
-    USERS ||--o{ PRODUCTS : "manages (if vendor)"
-    USERS ||--o{ ORDERS : "places (if customer)"
-    USERS ||--o{ REVIEWS : "writes (if customer)"
-    CATEGORIES ||--o{ PRODUCTS : "contains"
-    PRODUCTS ||--o{ ORDER_ITEMS : "included_in"
-    ORDERS ||--|{ ORDER_ITEMS : "consists_of"
-    PRODUCTS ||--o{ REVIEWS : "receives"
+    USERS ||--o{ GADGETS : "lists (as vendor)"
+    USERS ||--o{ ORDERS : "places (as customer)"
+    ORDERS ||--|{ ORDER_ITEMS : "contains"
+    GADGETS ||--o{ ORDER_ITEMS : "part_of"
 ```

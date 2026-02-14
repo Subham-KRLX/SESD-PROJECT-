@@ -1,47 +1,43 @@
-# Project Idea: NexaRetail - Advanced E-commerce Platform
+# Project Idea: TechSpark - Exclusive Tech Gadget Marketplace
 
 ## Overview
-**NexaRetail** is a comprehensive, full-stack e-commerce platform designed to provide a seamless shopping experience for consumers and a robust management system for vendors and administrators. The focus of the project is on building a scalable, maintainable backend using Clean Architecture and Object-Oriented Programming (OOP) principles.
+**TechSpark** is a specialized e-commerce platform dedicated to high-end tech gadgets, peripherals, and innovative electronics. It provides enthusiasts with a curated shopping experience, high-quality product descriptions, and a streamlined path to owning the latest technology.
 
 ## Problem Statement
-Traditional retail often lacks real-time inventory synchronization, personalized user experiences, and efficient order processing. NexaRetail aims to solve these by providing a highly responsive system with specialized roles and automated workflows.
+General e-commerce sites often lack the specialized focus and detailed technical specifications that tech enthusiasts require. TechSpark bridges this gap by offering a platform tailored specifically for electronics, with features optimized for gadget comparison and technical review.
 
 ## Scope
 
 ### In Scope
-- **User Management**: Support for Customers, Vendors, and Administrators with Role-Based Access Control (RBAC).
-- **Product Catalog**: Dynamic product listings with categories, filters, and search functionality.
-- **Shopping Cart & Checkout**: End-to-end flow from cart management to order placement.
-- **Order Management**: Real-time tracking of orders for both customers and vendors.
-- **Review System**: Ratings and feedback mechanism for products.
-- **Clean Architecture Backend**: Decoupled layers (Controllers, Services, Repositories).
-- **OOP Design**: Extensive use of inheritance, encapsulation, and common design patterns.
+- **Specialized Product Catalog**: Focused exclusively on tech gadgets (Processors, Peripherals, Smart Home, etc.).
+- **User Roles**: Customers (Tech Enthusiasts), Vendors (Tech Brands), and Administrators.
+- **Detailed Specifications**: Comprehensive technical data for all listed products.
+- **Cart & Checkout**: Efficient flow for quick gadget acquisition.
+- **Vendor Inventory**: Tools for brands to manage their tech inventory and sales.
+- **Clean Architecture Backend**: Maintainable Node.js + TypeScript core.
 
 ### Out of Scope (for Milestone 1)
-- Actual payment gateway integration (simulated only).
-- Mobile application.
-- Advanced AI-based recommendation engine.
+- Live gadget pricing API integration.
+- Hardware-specific device compatibility checker.
+- Real payment processing (simulated).
 
 ## Key Features
 
-### 1. Advanced Product Catalog
-- **Multi-vendor support**: Different vendors can list their products.
-- **Inventory tracking**: Real-time updates on stock levels.
+### 1. Gadget Marketplace
+- **Niche Categories**: Search by tech specs, brands, or performance metrics.
+- **Vendor Portal**: Specialized tools for tech vendors to showcase hardware.
 
-### 2. Seamless Checkout Experience
-- **Cart persistence**: Save user carts across sessions.
-- **Promotion engine**: Support for discount codes and seasonal sales.
+### 2. High-Performance Checkout
+- **Instant Order Processing**: Optimized flow for limited-run tech drops.
+- **Multi-Asset Cart**: Manage multiple tech items and peripherals seamlessly.
 
-### 3. Integrated Order System
-- **Order Status Tracking**: Pending, Shipped, Delivered, Cancelled.
-- **History**: Full transaction history for users.
+### 3. Order & Shipment Tracking
+- **Real-time Status**: Tracking from tech warehouse to customer doorstep.
 
-### 4. Admin Dashboard
-- **Analytics**: Sales reports and user activity.
-- **User Management**: Verify vendors and manage user accounts.
+### 4. Tech Enthusiast Features
+- **Technical Reviews**: Community ratings based on performance and build quality.
 
-## Technology Stack (Proposed)
-- **Backend**: Node.js with TypeScript (Express), Prisma ORM.
-- **Frontend**: React.js with Tailwind CSS.
-- **Database**: PostgreSQL (Relational).
-- **Testing**: Jest for unit and integration testing.
+## Technology Stack
+- **Backend**: Node.js, TypeScript, Express, Prisma.
+- **Frontend**: React.js, Tailwind CSS.
+- **Database**: PostgreSQL.

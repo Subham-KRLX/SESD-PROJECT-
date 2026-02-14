@@ -1,28 +1,28 @@
-# Use Case Diagram — NexaRetail
+# Use Case Diagram — TechSpark
 
 ## Overview
-This diagram depicts the interactions between various actors (Customer, Vendor, Admin) and the core functionalities of the NexaRetail E-commerce system.
+This diagram describes the primary use cases for the TechSpark e-commerce platform, focusing on the gadget discovery and acquisition process.
 
 ---
 
 ```mermaid
 useCaseDiagram
-    actor Customer
-    actor Vendor
-    actor Admin
+    actor "Tech Customer" as Customer
+    actor "Gadget Vendor" as Vendor
+    actor "Admin" as Admin
 
-    package "NexaRetail System" {
+    package "TechSpark Platform" {
         usecase "Register/Login" as UC1
-        usecase "Search & View Products" as UC2
-        usecase "Manage Cart" as UC3
-        usecase "Place Order" as UC4
-        usecase "Track Order" as UC5
-        usecase "Write Product Review" as UC6
-        usecase "Manage Inventory" as UC7
-        usecase "Process Orders" as UC8
-        usecase "Manage Categories" as UC9
-        usecase "View Sales Analytics" as UC10
-        usecase "Manage Users" as UC11
+        usecase "Browse Tech Gadgets" as UC2
+        usecase "Compare Specifications" as UC3
+        usecase "Add to Tech Cart" as UC4
+        usecase "Place Tech Order" as UC5
+        usecase "Track Shipment" as UC6
+        usecase "Rate Gadget Performance" as UC7
+        usecase "Manage Tech Inventory" as UC8
+        usecase "Update Gadget Specs" as UC9
+        usecase "Manage Tech Categories" as UC10
+        usecase "System Analytics" as UC11
     }
 
     Customer --> UC1
@@ -31,14 +31,14 @@ useCaseDiagram
     Customer --> UC4
     Customer --> UC5
     Customer --> UC6
+    Customer --> UC7
 
     Vendor --> UC1
-    Vendor --> UC7
     Vendor --> UC8
-    Vendor --> UC10
+    Vendor --> UC9
+    Vendor --> UC11
 
     Admin --> UC1
-    Admin --> UC9
     Admin --> UC10
     Admin --> UC11
 ```
