@@ -1,43 +1,56 @@
-# Project Idea: TechSpark - Exclusive Tech Gadget Marketplace
+# Project Idea: TechSpark - Premium Tech Gadget Marketplace
 
-## Overview
-**TechSpark** is a specialized e-commerce platform dedicated to high-end tech gadgets, peripherals, and innovative electronics. It provides enthusiasts with a curated shopping experience, high-quality product descriptions, and a streamlined path to owning the latest technology.
+## 1. Overview
+**TechSpark** is a high-performance, full-stack e-commerce platform tailored for tech enthusiasts, professionals, and hardware collectors. Unlike generic marketplaces, TechSpark focuses exclusively on high-end computing components, IoT devices, and specialized peripherals, providing an interface optimized for technical specifications and performance metrics.
 
-## Problem Statement
-General e-commerce sites often lack the specialized focus and detailed technical specifications that tech enthusiasts require. TechSpark bridges this gap by offering a platform tailored specifically for electronics, with features optimized for gadget comparison and technical review.
+## 2. Problem Statement
+The current e-commerce landscape is cluttered with generic products, making it difficult for tech-savvy consumers to find specialized hardware with verified specifications. Furthermore, vendors of niche tech often lack a dedicated platform that understands the technical nuances of their products (e.g., TDP, clock speeds, sensor types). 
 
-## Scope
+## 3. Scope
 
 ### In Scope
-- **Specialized Product Catalog**: Focused exclusively on tech gadgets (Processors, Peripherals, Smart Home, etc.).
-- **User Roles**: Customers (Tech Enthusiasts), Vendors (Tech Brands), and Administrators.
-- **Detailed Specifications**: Comprehensive technical data for all listed products.
-- **Cart & Checkout**: Efficient flow for quick gadget acquisition.
-- **Vendor Inventory**: Tools for brands to manage their tech inventory and sales.
-- **Clean Architecture Backend**: Maintainable Node.js + TypeScript core.
+- **Domain Focus**: Exclusive niche for hardware, PC components, and smart electronics.
+- **Multitenancy**: Support for verified Tech Vendors to list products.
+- **Role-Based Access Control (RBAC)**: Distinct permissions for Customers, Vendors, and Admins.
+- **Order Lifecycle**: End-to-end processing from cart to delivery tracking.
+- **Technical Review System**: Performance-based ratings and technical feedback.
+- **Scalable Backend**: Using Clean Architecture to decouple business logic from infrastructure.
+- **OOP Domain Model**: Strong types and behavioral encapsulation.
 
-### Out of Scope (for Milestone 1)
-- Live gadget pricing API integration.
-- Hardware-specific device compatibility checker.
-- Real payment processing (simulated).
+### Out of Scope
+- Real-world monetary payment gateway integration (simulated via Wallet/Credit system).
+- Mobile application (web-native responsive design initially).
+- Physical logistics management.
 
-## Key Features
+## 4. Key Features
 
-### 1. Gadget Marketplace
-- **Niche Categories**: Search by tech specs, brands, or performance metrics.
-- **Vendor Portal**: Specialized tools for tech vendors to showcase hardware.
+### A. Advanced Product Discovery
+- **Technical Filtering**: Filter gadgets by granular specs (e.g., RAM type, CPU socket, Battery capacity).
+- **Vendor Verification**: A trust-based system where brands are vetted by admins.
 
-### 2. High-Performance Checkout
-- **Instant Order Processing**: Optimized flow for limited-run tech drops.
-- **Multi-Asset Cart**: Manage multiple tech items and peripherals seamlessly.
+### B. High-Reliability Checkout
+- **Atomic Transactions**: Ensuring stock levels are updated safely during high-traffic "tech drops".
+- **Cart Persistence**: Persistent shopping experience across sessions.
 
-### 3. Order & Shipment Tracking
-- **Real-time Status**: Tracking from tech warehouse to customer doorstep.
+### C. Vendor & Admin Intelligence
+- **Vendor Dashboard**: Inventory alerts and sales metrics.
+- **Admin Controls**: Category management and user moderation.
 
-### 4. Tech Enthusiast Features
-- **Technical Reviews**: Community ratings based on performance and build quality.
+## 5. Architectural Principles (System Design Focus)
+To ensure full compliance with Software Engineering standards, TechSpark follows:
+- **Clean Architecture**: Separation of concerns into `Entities`, `Use Cases`, `Controllers`, and `Infrastructure`.
+- **SOLID Principles**: Ensuring the codebase is maintainable and extensible.
+- **Design Patterns**: 
+  - **Strategy**: For different discount calculations.
+  - **Repository**: For abstracting database operations.
+  - **Factory**: For creating different gadget types.
+- **OOP Pillars**:
+  - **Encapsulation**: Strict private fields with public methods.
+  - **Inheritance**: Specialized User and Product types.
+  - **Polymorphism**: Unified interfaces for notifications and payments.
 
-## Technology Stack
-- **Backend**: Node.js, TypeScript, Express, Prisma.
-- **Frontend**: React.js, Tailwind CSS.
-- **Database**: PostgreSQL.
+## 6. Technology Stack
+- **Backend**: Node.js, TypeScript, Express, Prisma (ORM).
+- **Frontend**: React.js, Tailwind CSS, Redux (State Management).
+- **Database**: PostgreSQL (Structured Relational Data).
+- **Verification**: Jest (Unit Testing), Supertest (API Testing).
