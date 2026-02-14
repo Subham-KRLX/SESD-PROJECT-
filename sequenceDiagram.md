@@ -1,44 +1,51 @@
-# Sequence Diagram: Order Matching & Trade Settlement
+# Sequence Diagram: Checkout & Order Placement
+
+## Overview
+This diagram illustrates the end-to-end flow of a customer placing an order, from adding products to the cart to the final order confirmation and notification.
+
+---
 
 ```mermaid
 sequenceDiagram
-    actor Prosumer
-    participant Frontend as "Web Interface"
-    participant OrderService
-    participant MatchingEngine
-    participant WalletService
-    participant TradeService
-    participant Database
+    actor Customer
+    participant FE as "Frontend (React)"
+    participant OC as "OrderController"
+    participant OS as "OrderService"
+    participant IS as "InventoryService"
+    participant WS as "WalletService"
+    participant DB as "Database (PostgreSQL)"
+    participant NS as "NotificationService"
 
-    Prosumer->>Frontend: Place Sell Order (10kWh @ $0.15/kWh)
-    Frontend->>OrderService: POST /orders/sell
-    activate OrderService
-    OrderService->>Database: Save Order (Status: ACTIVE)
-    OrderService->>MatchingEngine: Trigger Matching
-    deactivate OrderService
-
-    activate MatchingEngine
-    MatchingEngine->>Database: Find Matching Buy Orders
-    Database-->>MatchingEngine: List of Candidates
+    Customer->>FE: Click "Place Order"
+    FE->>OC: POST /api/orders (cartItems)
+    OC->>OS: placeNewOrder(customerId, cartItems)
     
-    alt Match Found
-        MatchingEngine->>TradeService: Execute Trade (Buyer, Seller, Price, Qty)
-        activate TradeService
-        TradeService->>Database: Create Trade Record (Status: PENDING)
+    activate OS
+    OS->>IS: checkAndReserveStock(cartItems)
+    IS-->>OS: stockAvailable (true/false)
+    
+    alt Stock Available
+        OS->>WS: processPayment(customerId, totalAmount)
+        WS-->>OS: paymentSuccess (true/false)
         
-        TradeService->>WalletService: Lock Funds (Escrow) for Buyer
-        activate WalletService
-        WalletService->>Database: Update Wallet Balances
-        WalletService-->>TradeService: Funds Locked
-        deactivate WalletService
-        
-        TradeService->>Database: Update Trade Status (SETTLED)
-        TradeService-->>MatchingEngine: Trade Successful
-        deactivate TradeService
-        
-        MatchingEngine->>Database: Update Orders (FILLED/PARTIALLY_FILLED)
-    else No Match
-        MatchingEngine->>Database: Keep Order Active
+        alt Payment Success
+            OS->>DB: createOrderRecord(details)
+            DB-->>OS: orderId
+            OS->>NS: sendConfirmation(customerId, orderId)
+            NS-->>OS: sent
+            OS-->>OC: Order Success (orderId)
+            OC-->>FE: HTTP 201 Created
+            FE-->>Customer: Display Success Message
+        else Payment Failed
+            OS->>IS: releaseReservedStock(cartItems)
+            OS-->>OC: Error: Payment Failed
+            OC-->>FE: HTTP 402 Payment Required
+            FE-->>Customer: Display Payment Error
+        end
+    else Stock Unavailable
+        OS-->>OC: Error: Item(s) Out of Stock
+        OC-->>FE: HTTP 409 Conflict
+        FE-->>Customer: Display Stock Error
     end
-    deactivate MatchingEngine
+    deactivate OS
 ```
