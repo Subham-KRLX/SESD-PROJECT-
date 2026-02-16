@@ -1,5 +1,6 @@
 # Project Idea: TechSpark - Premium Tech Gadget Marketplace
 
+
 ## 1. Overview
 **TechSpark** is a high-performance, full-stack e-commerce platform tailored for tech enthusiasts, professionals, and hardware collectors. Unlike generic marketplaces, TechSpark focuses exclusively on high-end computing components, IoT devices, and specialized peripherals, providing an interface optimized for technical specifications and performance metrics.
 
