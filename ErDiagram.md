@@ -1,5 +1,4 @@
 # ER Diagram — TechSpark
-
 ## Overview
 The TechSpark database schema is designed for consistency, integrity, and scalability, featuring normalized tables for users, tech inventory, and order processing.
 
