@@ -1,5 +1,4 @@
 # Use Case Diagram — TechSpark
-
 ## Overview
 This diagram represents the functional requirements of the TechSpark platform, illustrating how different actors interact with the system to achieve their goals.
 
