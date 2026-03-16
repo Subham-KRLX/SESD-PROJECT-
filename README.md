@@ -3,9 +3,6 @@
 ## Overview
 **TechSpark** is a high-performance, full-stack e-commerce platform tailored for tech enthusiasts, professionals, and hardware collectors. It focuses on high-end computing components, IoT devices, and specialized peripherals.
 
-## Project Status
-This project is currently in the **Initial Coding Phase (10%)**. The foundational structure, core domain entities, and database schema have been established.
-
 ## Architecture
 The project follows **Clean Architecture** principles:
 - `src/domain`: Core business logic and entities (User, Gadget).
