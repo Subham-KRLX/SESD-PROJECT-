@@ -1,0 +1,35 @@
+{
+  "name": "sesd-project-",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Subham-KRLX/SESD-PROJECT-.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/Subham-KRLX/SESD-PROJECT-/issues"
+  },
+  "homepage": "https://github.com/Subham-KRLX/SESD-PROJECT-#readme",
+  "devDependencies": {
+    "@prisma/client": "^6.19.2",
+    "@types/express": "^5.0.6",
+    "@types/jest": "^30.0.0",
+    "@types/node": "^25.5.0",
+    "@types/supertest": "^7.2.0",
+    "express": "^5.2.1",
+    "jest": "^30.3.0",
+    "prisma": "^6.19.2",
+    "supertest": "^7.2.2",
+    "ts-jest": "^29.4.6",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.9.3"
+  }
+}
