@@ -1,0 +1,98 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum UserRole {
+  CUSTOMER
+  VENDOR
+  ADMIN
+}
+
+enum OrderStatus {
+  PENDING
+  PAID
+  SHIPPED
+  DELIVERED
+}
+
+model User {
+  id            String    @id @default(uuid())
+  fullName      String
+  email         String    @unique
+  passwordHash  String
+  role          UserRole  @default(CUSTOMER)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  
+  vendorProfile Vendor?
+  orders        Order[]
+  reviews       Review[]
+}
+
+model Vendor {
+  id         String   @id @default(uuid())
+  userId     String   @unique
+  user       User     @relation(fields: [userId], references: [id])
+  brandName  String
+  isVerified Boolean  @default(false)
+  techNiche  String?
+  gadgets    Gadget[]
+}
+
+model Category {
+  id          String   @id @default(uuid())
+  name        String   @unique
+  description String?
+  gadgets     Gadget[]
+}
+
+model Gadget {
+  id             String      @id @default(uuid())
+  vendorId       String
+  vendor         Vendor      @relation(fields: [vendorId], references: [id])
+  categoryId     String
+  category       Category    @relation(fields: [categoryId], references: [id])
+  modelName      String
+  technicalSpecs String
+  price          Decimal
+  stockCount     Int
+  lastRestock    DateTime    @default(now())
+  orderItems     OrderItem[]
+  reviews        Review[]
+}
+
+model Order {
+  id         String      @id @default(uuid())
+  customerId String
+  customer   User        @relation(fields: [customerId], references: [id])
+  totalPrice Decimal
+  status     OrderStatus @default(PENDING)
+  orderDate  DateTime    @default(now())
+  items      OrderItem[]
+}
+
+model OrderItem {
+  id                   String  @id @default(uuid())
+  orderId              String
+  order                Order   @relation(fields: [orderId], references: [id])
+  gadgetId             String
+  gadget               Gadget  @relation(fields: [gadgetId], references: [id])
+  quantity             Int
+  unitPriceAtPurchase  Decimal
+}
+
+model Review {
+  id                String   @id @default(uuid())
+  customerId        String
+  customer          User     @relation(fields: [customerId], references: [id])
+  gadgetId          String
+  gadget            Gadget   @relation(fields: [gadgetId], references: [id])
+  performanceRating Int
+  feedbackText      String
+  createdAt         DateTime @default(now())
+}
