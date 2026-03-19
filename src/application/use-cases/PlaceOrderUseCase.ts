@@ -1,7 +1,7 @@
-import { Order, OrderItem } from '../../domain/entities/Order';
-import { IGadgetRepository } from '../../domain/repositories/IGadgetRepository';
-import { IOrderRepository } from '../../domain/repositories/IOrderRepository';
-import { v4 as uuidv4 } from 'uuid';
+import { Order, OrderItem } from '../../domain/entities/Order.js';
+import type { IGadgetRepository } from '../../domain/repositories/IGadgetRepository.js';
+import type { IOrderRepository } from '../../domain/repositories/IOrderRepository.js';
+import crypto from 'crypto';
 
 interface OrderItemInput {
   gadgetId: string;
@@ -31,13 +31,12 @@ export class PlaceOrderUseCase {
       );
       orderItems.push(orderItem);
 
-      // Decrement stock in domain entity (in-memory)
       gadget.stockQty -= item.quantity;
       await this.gadgetRepository.updateStock(gadget.id, gadget.stockQty);
     }
 
     const order = new Order(
-      uuidv4(),
+      crypto.randomUUID(),
       customerId,
       orderItems
     );

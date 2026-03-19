@@ -1,7 +1,7 @@
-import { Review } from '../../domain/entities/Review';
-import { IGadgetRepository } from '../../domain/repositories/IGadgetRepository';
-import { IUserRepository } from '../../domain/repositories/IUserRepository';
-import { v4 as uuidv4 } from 'uuid';
+import { Review } from '../../domain/entities/Review.js';
+import type { IGadgetRepository } from '../../domain/repositories/IGadgetRepository.js';
+import type { IUserRepository } from '../../domain/repositories/IUserRepository.js';
+import crypto from 'crypto';
 
 export class SubmitTechnicalReviewUseCase {
   constructor(
@@ -18,14 +18,13 @@ export class SubmitTechnicalReviewUseCase {
     if (!gadget) throw new Error("Gadget not found.");
 
     const review = new Review(
-      uuidv4(),
+      crypto.randomUUID(),
       customerId,
       gadgetId,
       rating,
       feedback
     );
 
-    // In a real app, save via IReviewRepository (skipping for brevity)
     return review;
   }
 }
