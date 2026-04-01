@@ -1,7 +1,6 @@
 # TechSpark - Premium Tech Gadget Marketplace
 
 ## Overview 
-
 **TechSpark** is a high-performance, full-stack e-commerce platform tailored for tech enthusiasts, professionals, and hardware collectors. It focuses on high-end computing components, IoT devices, and specialized peripherals.
 
 ## Project Status
