@@ -5,7 +5,11 @@
 
 
 ## Project Status
-This project is currently in the **Development Phase (40%)**. The core domain logic, repositories, and complex use cases have been implemented using Clean Architecture.
+This project is currently in the **Development Phase**. 
+- **Backend**: ~30% Complete 
+- **Frontend**: ~45% Complete
+
+The core domain logic, repositories, and complex use cases have been implemented using Clean Architecture. The frontend React application is scaffolded and connected to key application use-cases.
 
 ## Architecture
 The project follows strict **Clean Architecture** principles:
@@ -16,6 +20,7 @@ The project follows strict **Clean Architecture** principles:
 - `src/application/use-cases`: Orchestration of business logic (Place Order, Submit Review).
 - `src/infrastructure`: Frameworks and drivers (Prisma, Express).
 - `src/index.ts`: Application entry point and demonstration routes.
+- `frontend/`: Integrated React Single Page Application utilizing Vite and Tailwind CSS.
 
 ## Documentation
 Detailed system design and business requirements are located in the `docs/` folder:
@@ -27,6 +32,7 @@ Detailed system design and business requirements are located in the `docs/` fold
 
 ## Technology Stack
 - **Backend**: Node.js, TypeScript, Express, Prisma (ORM).
+- **Frontend**: React.js, Vite, Tailwind CSS v4.
 - **Database**: PostgreSQL (Relational Data).
 - **Verification**: Jest (Unit Testing), Prisma Validate.
 
@@ -65,7 +71,8 @@ npx prisma validate
 - [x] Factory Pattern for Gadget Creation
 - [x] Order Management Use Case (Stock decrement with transaction logic)
 - [x] Technical Review System Use Case
-- [ ] Authentication & RBAC (Next Step)
-- [ ] Product Discovery & Filtering
+- [x] Authentication & RBAC (Use Cases wired up)
+- [x] Product Discovery & Filtering (Use Cases and UI wired up)
+- [x] Core Frontend UI (Home, Browse, Login React Pages)
 - [ ] Technical Reviews API Integration
 - [ ] Technical Hardware Dashboard
