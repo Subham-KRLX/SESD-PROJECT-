@@ -28,22 +28,15 @@ app.get('/demo/pricing', (req, res) => {
   });
 });
 
-// Mock implementations for demonstration purposes
-const mockUserRepository: any = {
-  findByEmail: async (e: string) => null,
-  save: async (u: any) => console.log('Saved user', u)
-};
+import { PrismaUserRepository } from './infrastructure/repositories/PrismaUserRepository.js';
+import { PrismaGadgetRepository } from './infrastructure/repositories/PrismaGadgetRepository.js';
 
-const mockGadgetRepository: any = {
-  findAll: async () => [
-    { id: '1', modelName: 'RTX 4090', manufacturer: 'NVIDIA', price: 1599, stockQty: 10, isAvailable: () => true, getDetails: () => 'NVIDIA RTX 4090' },
-    { id: '2', modelName: 'Ryzen 9 7950X', manufacturer: 'AMD', price: 699, stockQty: 5, isAvailable: () => true, getDetails: () => 'AMD Ryzen 9' }
-  ]
-};
+const userRepository = new PrismaUserRepository();
+const gadgetRepository = new PrismaGadgetRepository();
 
-const registerUserUseCase = new RegisterUserUseCase(mockUserRepository);
-const authenticateUserUseCase = new AuthenticateUserUseCase(mockUserRepository);
-const browseGadgetsUseCase = new BrowseGadgetsUseCase(mockGadgetRepository);
+const registerUserUseCase = new RegisterUserUseCase(userRepository);
+const authenticateUserUseCase = new AuthenticateUserUseCase(userRepository);
+const browseGadgetsUseCase = new BrowseGadgetsUseCase(gadgetRepository);
 
 app.post('/api/auth/register', async (req, res) => {
   try {
