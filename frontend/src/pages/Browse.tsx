@@ -1,77 +1,130 @@
 import { useEffect, useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 
 export default function Browse() {
   const [gadgets, setGadgets] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    // In a real app we'd fetch from http://localhost:3000/api/gadgets
-    // For now we mock the API response
-    setTimeout(() => {
-      setGadgets([
-        { id: '1', modelName: 'RTX 4090', manufacturer: 'NVIDIA', price: 1599, stockQty: 10, techSpecs: '24GB GDDR6X, 16384 CUDA Cores' },
-        { id: '2', modelName: 'Ryzen 9 7950X', manufacturer: 'AMD', price: 599, stockQty: 5, techSpecs: '16 Cores, 32 Threads, 5.7GHz Boost' },
-        { id: '3', modelName: 'ROG Crosshair X670E', manufacturer: 'ASUS', price: 479, stockQty: 12, techSpecs: 'AM5 Socket, DDR5, PCIe 5.0' },
-        { id: '4', modelName: 'Samsung 990 PRO 2TB', manufacturer: 'Samsung', price: 169, stockQty: 0, techSpecs: 'PCIe 4.0 NVMe M.2 7450 MB/s' }
-      ]);
-      setLoading(false);
-    }, 800);
+    const fetchGadgets = async () => {
+      try {
+        const response = await fetch('/api/gadgets');
+        if (!response.ok) throw new Error('System failure: Unable to sync with hardware grid');
+        const data = await response.json();
+        setGadgets(data);
+      } catch (err: any) {
+        setError(err.message);
+        // Fallback for demo if API isn't running
+        setGadgets([
+          { id: '1', modelName: 'RTX 5090 Prototype', manufacturer: 'QuantumTech', price: 2499, stockQty: 5, techSpecs: '32GB GDDR7, Blackwell Architecture' },
+          { id: '2', modelName: 'Ryzen 9 9950X', manufacturer: 'QuantumTech', price: 699, stockQty: 15, techSpecs: '16 Cores, 32 Threads, 5.8GHz' }
+        ]);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchGadgets();
   }, []);
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-      <div className="flex justify-between items-center mb-10">
-        <h2 className="text-3xl font-bold">Professional Hardware</h2>
-        <div className="flex gap-4">
-          <input 
-            type="text" 
-            placeholder="Search specs, models..." 
-            className="bg-slate-800 border border-slate-700 rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none w-64"
-          />
-          <button className="bg-slate-800 hover:bg-slate-700 border border-slate-700 px-4 py-2 rounded-lg transition-colors">
-            Filter
-          </button>
-        </div>
-      </div>
-
-      {loading ? (
-        <div className="flex justify-center items-center h-64">
-          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
-        </div>
-      ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {gadgets.map((g) => (
-            <div key={g.id} className="bg-slate-800/80 border border-slate-700/80 rounded-xl overflow-hidden hover:shadow-[0_0_15px_rgba(59,130,246,0.2)] transition-all hover:-translate-y-1">
-              <div className="h-48 bg-slate-700/50 flex items-center justify-center border-b border-slate-700">
-                <span className="text-5xl opacity-40">💻</span>
-              </div>
-              <div className="p-6">
-                <div className="flex justify-between items-start mb-2">
-                  <div>
-                    <p className="text-blue-400 text-sm font-semibold">{g.manufacturer}</p>
-                    <h3 className="text-xl font-bold">{g.modelName}</h3>
-                  </div>
-                  <span className="text-lg font-bold text-green-400">${g.price}</span>
-                </div>
-                <p className="text-slate-400 text-sm mt-4 mb-6 leading-relaxed">
-                  {g.techSpecs}
-                </p>
-                <div className="flex justify-between items-center">
-                  <span className={`text-xs px-2 py-1 rounded-full font-medium ${g.stockQty > 0 ? 'bg-green-500/20 text-green-400' : 'bg-red-500/20 text-red-400'}`}>
-                    {g.stockQty > 0 ? 'In Stock' : 'Out of Stock'}
-                  </span>
-                  <button 
-                    disabled={g.stockQty === 0}
-                    className={`px-4 py-2 rounded-lg font-medium transition-colors ${g.stockQty > 0 ? 'bg-blue-600 hover:bg-blue-500' : 'bg-slate-700 text-slate-500 cursor-not-allowed'}`}
-                  >
-                    Add to Cart
-                  </button>
-                </div>
-              </div>
+    <div className="min-h-screen bg-black text-slate-100 py-20 px-6 lg:px-24">
+      <div className="max-w-7xl mx-auto">
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-16 gap-6">
+          <div>
+            <h2 className="text-4xl md:text-5xl font-black tracking-tighter mb-2">
+              HARDWARE <span className="text-blue-500">GRID</span>
+            </h2>
+            <p className="text-slate-500 font-medium">Synchronizing with real-time vendor inventory</p>
+          </div>
+          
+          <div className="flex gap-4 w-full md:w-auto">
+            <div className="relative flex-1 md:w-80">
+              <input 
+                type="text" 
+                placeholder="Search specs..." 
+                className="w-full bg-slate-900/50 border border-slate-800 rounded-2xl px-6 py-4 focus:ring-2 focus:ring-blue-500/50 focus:outline-none backdrop-blur-xl transition-all"
+              />
+              <span className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-600">⌘K</span>
             </div>
-          ))}
+            <button className="bg-slate-900 hover:bg-slate-800 border border-slate-800 px-6 py-4 rounded-2xl transition-all font-bold">
+              Filters
+            </button>
+          </div>
         </div>
-      )}
+
+        {loading ? (
+          <div className="flex flex-col justify-center items-center h-96 space-y-4">
+            <div className="w-16 h-16 border-4 border-blue-500/20 border-t-blue-500 rounded-full animate-spin"></div>
+            <p className="text-blue-500 font-mono animate-pulse">DECRYPTING INVENTORY...</p>
+          </div>
+        ) : (
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
+          >
+            <AnimatePresence>
+              {gadgets.map((g, i) => (
+                <motion.div 
+                  key={g.id}
+                  initial={{ opacity: 0, scale: 0.9 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ delay: i * 0.1 }}
+                  whileHover={{ y: -8 }}
+                  className="group relative bg-slate-900/30 border border-slate-800/50 rounded-[2.5rem] overflow-hidden backdrop-blur-3xl hover:border-blue-500/40 transition-all duration-500"
+                >
+                  {/* Glowing background effect */}
+                  <div className="absolute -inset-1 bg-gradient-to-r from-blue-600 to-indigo-600 opacity-0 group-hover:opacity-10 blur-2xl transition-opacity" />
+                  
+                  <div className="aspect-square bg-gradient-to-br from-slate-800/50 to-transparent flex items-center justify-center relative overflow-hidden">
+                     <span className="text-7xl group-hover:scale-110 transition-transform duration-700 ease-out grayscale group-hover:grayscale-0">
+                       {g.modelName.includes('RTX') ? '🔌' : '🧠'}
+                     </span>
+                     <div className="absolute top-6 right-6 bg-black/40 backdrop-blur-md px-4 py-2 rounded-xl border border-white/5 font-bold text-green-400">
+                       ${g.price}
+                     </div>
+                  </div>
+
+                  <div className="p-8">
+                    <div className="mb-6">
+                      <span className="text-xs font-black uppercase tracking-[0.2em] text-blue-500/80 mb-2 block">
+                        {g.manufacturer}
+                      </span>
+                      <h3 className="text-2xl font-bold tracking-tight group-hover:text-blue-400 transition-colors">
+                        {g.modelName}
+                      </h3>
+                    </div>
+
+                    <p className="text-slate-500 text-sm leading-relaxed mb-8 h-10 overflow-hidden line-clamp-2">
+                      {g.techSpecs}
+                    </p>
+
+                    <div className="flex justify-between items-center bg-black/20 p-2 rounded-2xl border border-white/5">
+                      <div className="px-4">
+                        <span className={`text-[10px] font-black uppercase tracking-widest ${g.stockQty > 0 ? 'text-green-500' : 'text-red-500'}`}>
+                          {g.stockQty > 0 ? `${g.stockQty} UNITS` : 'DEPLETED'}
+                        </span>
+                      </div>
+                      <button 
+                        disabled={g.stockQty === 0}
+                        className={`px-6 py-3 rounded-xl font-black text-xs tracking-widest transition-all ${
+                          g.stockQty > 0 
+                          ? 'bg-blue-600 hover:bg-blue-500 text-white shadow-[0_0_20px_rgba(37,99,235,0.2)]' 
+                          : 'bg-slate-800 text-slate-600 cursor-not-allowed'
+                        }`}
+                      >
+                        ACQUIRE
+                      </button>
+                    </div>
+                  </div>
+                </motion.div>
+              ))}
+            </AnimatePresence>
+          </motion.div>
+        )}
+      </div>
     </div>
   );
 }
