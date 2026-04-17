@@ -1,7 +1,8 @@
 import { Order, OrderItem, type OrderStatus as EntityOrderStatus } from '../../domain/entities/Order.js';
 import type { IOrderRepository } from '../../domain/repositories/IOrderRepository.js';
 import { prisma } from '../database/client.js';
-import { OrderStatus as PrismaOrderStatus } from '@prisma/client';
+
+type PrismaOrderStatus = 'PENDING' | 'PAID' | 'SHIPPED' | 'DELIVERED';
 
 export class PrismaOrderRepository implements IOrderRepository {
   private mapToEntity(dbOrder: any): Order {

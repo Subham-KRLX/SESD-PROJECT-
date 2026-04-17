@@ -1,11 +1,12 @@
 import { User, TechCustomer, GadgetVendor } from '../../domain/entities/User.js';
 import type { IUserRepository } from '../../domain/repositories/IUserRepository.js';
 import { prisma } from '../database/client.js';
-import { UserRole } from '@prisma/client';
+
+type PrismaUserRole = 'CUSTOMER' | 'VENDOR' | 'ADMIN';
 
 export class PrismaUserRepository implements IUserRepository {
   private mapToEntity(dbUser: any): User {
-    if (dbUser.role === UserRole.VENDOR) {
+    if (dbUser.role === 'VENDOR') {
       return new GadgetVendor(
         dbUser.id,
         dbUser.fullName,
@@ -45,7 +46,7 @@ export class PrismaUserRepository implements IUserRepository {
       fullName: user.name,
       email: user.email,
       passwordHash: (user as any).passwordHash, // Accessing protected for DB save
-      role: user.role as UserRole
+      role: user.role as PrismaUserRole
     };
 
     if (user instanceof GadgetVendor) {
@@ -79,7 +80,7 @@ export class PrismaUserRepository implements IUserRepository {
 
   async listVendors(): Promise<User[]> {
     const dbUsers = await prisma.user.findMany({
-      where: { role: UserRole.VENDOR },
+      where: { role: 'VENDOR' },
       include: { vendorProfile: true }
     });
     return dbUsers.map(this.mapToEntity);
