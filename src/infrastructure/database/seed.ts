@@ -1,4 +1,5 @@
 import { PrismaClient } from '@prisma/client';
+import { hashPassword } from '../../domain/entities/User.js';
 
 const prisma = new PrismaClient();
 
@@ -25,7 +26,7 @@ async function main() {
     create: {
       email: 'vendor@quantumtech.com',
       fullName: 'QuantumTech Logistics',
-      passwordHash: 'hashed_password_here', // In a real app, use bcrypt
+      passwordHash: hashPassword('vendor12345'),
       role: 'VENDOR'
     }
   });
@@ -83,7 +84,7 @@ async function main() {
       id: 'demo-user-123',
       email: 'demo-user-123@techspark.com',
       fullName: 'Hardware Enthusiast',
-      passwordHash: 'hashed_password',
+      passwordHash: hashPassword('demo12345'),
       role: 'CUSTOMER'
     }
   });

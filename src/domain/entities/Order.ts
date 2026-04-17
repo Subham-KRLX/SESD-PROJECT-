@@ -10,6 +10,15 @@ export class OrderItem {
   getTotalPrice(): number {
     return this.quantity * this.unitPrice;
   }
+
+  toJSON() {
+    return {
+      gadgetId: this.gadgetId,
+      quantity: this.quantity,
+      priceAtPurchase: this.unitPrice,
+      totalPrice: this.getTotalPrice(),
+    };
+  }
 }
 
 export class Order {
@@ -35,5 +44,16 @@ export class Order {
   updateStatus(newStatus: OrderStatus): void {
     // Basic status progression logic
     this._status = newStatus;
+  }
+
+  toJSON() {
+    return {
+      id: this.id,
+      customerId: this.customerId,
+      status: this.status,
+      createdAt: this.orderDate.toISOString(),
+      totalAmount: this.calculateTotal(),
+      items: this.items,
+    };
   }
 }

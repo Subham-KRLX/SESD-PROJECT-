@@ -1,3 +1,4 @@
+import 'dotenv/config';
 import express from 'express';
 import { PlaceOrderUseCase } from './application/use-cases/PlaceOrderUseCase.js';
 import { SubmitTechnicalReviewUseCase } from './application/use-cases/SubmitTechnicalReviewUseCase.js';
