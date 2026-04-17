@@ -1,10 +1,11 @@
-import { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { FiCpu, FiMonitor, FiX, FiCheckCircle, FiCpu as FiGpu } from 'react-icons/fi';
 
-export default function Browse() {
+export default function Browse({ onAddToCart }: { onAddToCart: (product: any) => void }) {
   const [gadgets, setGadgets] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [selectedGadget, setSelectedGadget] = useState<any | null>(null);
 
   useEffect(() => {
     const fetchGadgets = async () => {
@@ -87,7 +88,10 @@ export default function Browse() {
                      </div>
                   </div>
 
-                  <div className="p-8">
+                  <div 
+                    className="p-8 cursor-pointer"
+                    onClick={() => setSelectedGadget(g)}
+                  >
                     <div className="mb-6">
                       <span className="text-xs font-black uppercase tracking-[0.2em] text-blue-500/80 mb-2 block">
                         {g.manufacturer}
@@ -109,6 +113,10 @@ export default function Browse() {
                       </div>
                       <button 
                         disabled={g.stockQty === 0}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          onAddToCart({ id: g.id, name: g.modelName, price: g.price });
+                        }}
                         className={`px-6 py-3 rounded-xl font-black text-xs tracking-widest transition-all ${
                           g.stockQty > 0 
                           ? 'bg-blue-600 hover:bg-blue-500 text-white shadow-[0_0_20px_rgba(37,99,235,0.2)]' 
@@ -125,6 +133,78 @@ export default function Browse() {
           </motion.div>
         )}
       </div>
+
+      {/* Quick View Modal */}
+      <AnimatePresence>
+        {selectedGadget && (
+          <>
+            <motion.div 
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setSelectedGadget(null)}
+              className="fixed inset-0 bg-black/80 backdrop-blur-md z-[100]"
+            />
+            <motion.div 
+              initial={{ scale: 0.9, opacity: 0, y: 20 }}
+              animate={{ scale: 1, opacity: 1, y: 0 }}
+              exit={{ scale: 0.9, opacity: 0, y: 20 }}
+              className="fixed inset-6 md:inset-20 lg:inset-x-60 lg:inset-y-32 bg-slate-900 rounded-[3rem] border border-slate-800 shadow-2xl z-[110] overflow-hidden flex flex-col md:flex-row"
+            >
+              <button 
+                onClick={() => setSelectedGadget(null)}
+                className="absolute top-8 right-8 p-3 bg-black/50 hover:bg-black rounded-full z-[120] text-white transition-colors"
+              >
+                <FiX size={24} />
+              </button>
+
+              <div className="md:w-1/2 bg-gradient-to-br from-slate-800 to-black flex items-center justify-center p-12">
+                 <span className="text-9xl grayscale opacity-50">
+                    {selectedGadget.modelName.includes('RTX') ? '🔌' : '🧠'}
+                 </span>
+              </div>
+
+              <div className="md:w-1/2 p-12 flex flex-col justify-between overflow-y-auto">
+                <div>
+                  <span className="text-sm font-black text-blue-500 uppercase tracking-widest mb-4 block">Hardware Verification v2.0</span>
+                  <h2 className="text-5xl font-black tracking-tighter mb-4">{selectedGadget.modelName}</h2>
+                  <p className="text-slate-400 text-lg leading-relaxed mb-8">
+                    Certified hardware by {selectedGadget.manufacturer}. {selectedGadget.techSpecs}
+                  </p>
+
+                  <div className="space-y-6">
+                    <div className="flex items-center gap-4 bg-slate-800/50 p-6 rounded-3xl border border-white/5">
+                      <div className="p-4 bg-blue-500/10 text-blue-400 rounded-2xl">
+                        <FiCheckCircle size={24} />
+                      </div>
+                      <div>
+                        <p className="text-sm font-bold">Standard Benchmarks Passed</p>
+                        <p className="text-xs text-slate-500">Stability verified at 100% load.</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="mt-12 flex items-center justify-between gap-8">
+                  <div>
+                    <p className="text-xs font-black text-slate-600 uppercase tracking-widest mb-1">MSRP Investment</p>
+                    <p className="text-4xl font-black text-white">${selectedGadget.price}</p>
+                  </div>
+                  <button 
+                    onClick={() => {
+                      onAddToCart({ id: selectedGadget.id, name: selectedGadget.modelName, price: selectedGadget.price });
+                      setSelectedGadget(null);
+                    }}
+                    className="flex-1 bg-white text-black py-4 rounded-2xl font-black text-sm tracking-widest hover:bg-blue-500 hover:text-white transition-all shadow-[0_20px_40px_rgba(0,0,0,0.3)]"
+                  >
+                    DEPLOY UNIT
+                  </button>
+                </div>
+              </div>
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
     </div>
   );
 }
