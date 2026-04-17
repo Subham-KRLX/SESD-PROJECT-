@@ -1,3 +1,9 @@
+import crypto from 'crypto';
+
+export function hashPassword(password: string): string {
+  return crypto.createHash('sha256').update(password).digest('hex');
+}
+
 export abstract class User {
   constructor(
     public readonly id: string,
@@ -8,6 +14,15 @@ export abstract class User {
   ) {}
 
   abstract authenticate(password: string): boolean;
+
+  toJSON() {
+    return {
+      id: this.id,
+      name: this.name,
+      email: this.email,
+      role: this.role,
+    };
+  }
   
   updateProfile(name: string, email: string): void {
     this.name = name;
@@ -30,7 +45,7 @@ export class TechCustomer extends User {
   }
 
   authenticate(password: string): boolean {
-    return true; 
+    return this.passwordHash === hashPassword(password);
   }
 }
 
@@ -47,6 +62,14 @@ export class GadgetVendor extends User {
   }
 
   authenticate(password: string): boolean {
-    return true;
+    return this.passwordHash === hashPassword(password);
+  }
+
+  override toJSON() {
+    return {
+      ...super.toJSON(),
+      brandName: this.brandName,
+      isVerified: this.isVerified,
+    };
   }
 }

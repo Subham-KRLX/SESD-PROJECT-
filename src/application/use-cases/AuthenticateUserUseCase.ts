@@ -4,15 +4,14 @@ import { User } from '../../domain/entities/User.js';
 export class AuthenticateUserUseCase {
   constructor(private userRepository: IUserRepository) {}
 
-  async execute(email: string, passwordHash: string): Promise<{ token: string; user: User }> {
+  async execute(email: string, password: string): Promise<{ token: string; user: User }> {
     const user = await this.userRepository.findByEmail(email);
     
     if (!user) {
       throw new Error('Invalid credentials.');
     }
 
-    // In a real scenario, use bcrypt to compare
-    if (!user.authenticate(passwordHash)) {
+    if (!user.authenticate(password)) {
       throw new Error('Invalid credentials.');
     }
 
