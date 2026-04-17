@@ -7,6 +7,7 @@ import { AuthenticateUserUseCase } from './application/use-cases/AuthenticateUse
 import { BrowseGadgetsUseCase } from './application/use-cases/BrowseGadgetsUseCase.js';
 import { GetOrderHistoryUseCase } from './application/use-cases/GetOrderHistoryUseCase.js';
 import { GetDashboardStatsUseCase } from './application/use-cases/GetDashboardStatsUseCase.js';
+import { GetGadgetByIdUseCase } from './application/use-cases/GetGadgetByIdUseCase.js';
 
 import { PrismaUserRepository } from './infrastructure/repositories/PrismaUserRepository.js';
 import { PrismaGadgetRepository } from './infrastructure/repositories/PrismaGadgetRepository.js';
@@ -36,6 +37,7 @@ const placeOrderUseCase = new PlaceOrderUseCase(gadgetRepository, orderRepositor
 const submitReviewUseCase = new SubmitTechnicalReviewUseCase(gadgetRepository, userRepository, reviewRepository);
 const getOrderHistoryUseCase = new GetOrderHistoryUseCase(orderRepository);
 const getDashboardStatsUseCase = new GetDashboardStatsUseCase();
+const getGadgetByIdUseCase = new GetGadgetByIdUseCase(gadgetRepository);
 
 // Auth Routes
 app.post('/api/auth/register', async (req, res) => {
@@ -63,6 +65,15 @@ app.get('/api/gadgets', async (req, res) => {
     res.status(200).json(gadgets);
   } catch (error: any) {
     res.status(500).json({ error: 'Failed to fetch gadgets' });
+  }
+});
+
+app.get('/api/gadgets/:id', async (req, res) => {
+  try {
+    const gadget = await getGadgetByIdUseCase.execute(req.params.id);
+    res.status(200).json(gadget);
+  } catch (error: any) {
+    res.status(404).json({ error: error.message });
   }
 });
 
