@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { FiCpu, FiMonitor, FiX, FiCheckCircle, FiCpu as FiGpu } from 'react-icons/fi';
 
@@ -67,7 +68,7 @@ export default function Browse({ onAddToCart }: { onAddToCart: (product: any) =>
             className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
           >
             <AnimatePresence>
-              {gadgets.map((g, i) => (
+              {gadgets.map((g: any, i: number) => (
                 <motion.div 
                   key={g.id}
                   initial={{ opacity: 0, scale: 0.9 }}

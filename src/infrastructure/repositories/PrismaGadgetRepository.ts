@@ -1,5 +1,5 @@
 import { Gadget } from '../../domain/entities/Gadget.js';
-import { IGadgetRepository } from '../../domain/repositories/IGadgetRepository.js';
+import type { IGadgetRepository } from '../../domain/repositories/IGadgetRepository.js';
 import { prisma } from '../database/client.js';
 import { Prisma } from '@prisma/client';
 

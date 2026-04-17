@@ -1,5 +1,5 @@
 import { Review } from '../../domain/entities/Review.js';
-import { IReviewRepository } from '../../domain/repositories/IReviewRepository.js';
+import type { IReviewRepository } from '../../domain/repositories/IReviewRepository.js';
 import { prisma } from '../database/client.js';
 
 export class PrismaReviewRepository implements IReviewRepository {

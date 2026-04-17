@@ -1,5 +1,5 @@
 import { User, TechCustomer, GadgetVendor } from '../../domain/entities/User.js';
-import { IUserRepository } from '../../domain/repositories/IUserRepository.js';
+import type { IUserRepository } from '../../domain/repositories/IUserRepository.js';
 import { prisma } from '../database/client.js';
 import { UserRole } from '@prisma/client';
 

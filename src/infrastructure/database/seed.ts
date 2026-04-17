@@ -98,8 +98,8 @@ async function main() {
       status: 'DELIVERED',
       items: {
         create: [
-          { gadgetId: allGadgets[0].id, quantity: 1, unitPriceAtPurchase: 2499 },
-          { gadgetId: allGadgets[1].id, quantity: 1, unitPriceAtPurchase: 699 }
+          { gadgetId: allGadgets[0]?.id || '', quantity: 1, unitPriceAtPurchase: 2499 },
+          { gadgetId: allGadgets[1]?.id || '', quantity: 1, unitPriceAtPurchase: 699 }
         ]
       }
     }

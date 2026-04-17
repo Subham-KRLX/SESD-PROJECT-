@@ -1,4 +1,4 @@
-import { Order } from '../entities/Order';
+import { Order } from '../entities/Order.js';
 
 export interface IOrderRepository {
   findById(id: string): Promise<Order | null>;

@@ -1,10 +1,10 @@
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
-import Home from './pages/Home';
-import Browse from './pages/Browse';
-import Login from './pages/Login';
-import Dashboard from './pages/Dashboard';
-import OrderHistory from './pages/OrderHistory';
-import CartDrawer from './components/CartDrawer';
+import Home from './pages/Home.js';
+import Browse from './pages/Browse.js';
+import Login from './pages/Login.js';
+import Dashboard from './pages/Dashboard.js';
+import OrderHistory from './pages/OrderHistory.js';
+import CartDrawer from './components/CartDrawer.js';
 import { useState, useEffect } from 'react';
 import { FiShoppingCart } from 'react-icons/fi';
 

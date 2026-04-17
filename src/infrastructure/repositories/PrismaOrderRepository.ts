@@ -1,5 +1,5 @@
-import { Order, OrderItem, OrderStatus as EntityOrderStatus } from '../../domain/entities/Order.js';
-import { IOrderRepository } from '../../domain/repositories/IOrderRepository.js';
+import { Order, OrderItem, type OrderStatus as EntityOrderStatus } from '../../domain/entities/Order.js';
+import type { IOrderRepository } from '../../domain/repositories/IOrderRepository.js';
 import { prisma } from '../database/client.js';
 import { OrderStatus as PrismaOrderStatus } from '@prisma/client';
 
@@ -22,7 +22,7 @@ export class PrismaOrderRepository implements IOrderRepository {
   }
 
   async save(order: Order): Promise<void> {
-    await prisma.$transaction(async (tx) => {
+    await prisma.$transaction(async (tx: any) => {
       // 1. Create the Order
       await tx.order.create({
         data: {
