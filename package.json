@@ -4,6 +4,10 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "dev:backend": "node --loader ts-node/esm src/index.ts",
+    "dev:frontend": "cd frontend && npm run dev",
+    "dev": "npm run dev:backend & npm run dev:frontend",
+    "seed": "node --loader ts-node/esm prisma/seed.ts",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {

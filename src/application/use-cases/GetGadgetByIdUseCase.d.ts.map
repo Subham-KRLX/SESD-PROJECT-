@@ -1,1 +1,0 @@
-{"version":3,"file":"GetGadgetByIdUseCase.d.ts","sourceRoot":"","sources":["GetGadgetByIdUseCase.ts"],"names":[],"mappings":"AAAA,OAAO,KAAK,EAAE,iBAAiB,EAAE,MAAM,gDAAgD,CAAC;AACxF,OAAO,EAAE,MAAM,EAAE,MAAM,iCAAiC,CAAC;AAEzD,qBAAa,oBAAoB;IACnB,OAAO,CAAC,gBAAgB;gBAAhB,gBAAgB,EAAE,iBAAiB;IAEjD,OAAO,CAAC,QAAQ,EAAE,MAAM,GAAG,OAAO,CAAC,MAAM,CAAC;CAOjD"}

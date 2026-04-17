@@ -1,43 +1,29 @@
-import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Link, useLocation } from 'react-router-dom';
 import Home from './pages/Home.js';
 import Browse from './pages/Browse.js';
 import Login from './pages/Login.js';
 import Dashboard from './pages/Dashboard.js';
 import OrderHistory from './pages/OrderHistory.js';
-import CartDrawer from './components/CartDrawer.js';
-import { useState, useEffect } from 'react';
-import { FiShoppingCart } from 'react-icons/fi';
+import { CartDrawer } from './components/features/Cart/CartDrawer';
+import { useCartStore } from './store/cartStore';
+import { useState } from 'react';
+import { ShoppingCart, LayoutDashboard, Database, User, Zap } from 'lucide-react';
+import { AnimatePresence, motion } from 'framer-motion';
+import { AuthProvider, useAuth } from './contexts/AuthContext';
+import { useNavigate } from 'react-router-dom';
 
-interface CartItem {
-  id: string;
-  name: string;
-  price: number;
-  quantity: number;
-}
-
-function App() {
+function AppContent() {
   const [isCartOpen, setIsCartOpen] = useState(false);
-  const [cartItems, setCartItems] = useState<CartItem[]>([]);
+  const totalItems = useCartStore((state) => state.totalItems());
+  const cartItems = useCartStore((state) => state.items);
+  const clearCart = useCartStore((state) => state.clearCart);
+  const location = useLocation();
+  const navigate = useNavigate();
+  const { user, logout, isAuthenticated } = useAuth();
 
-  const addToCart = (product: any) => {
-    setCartItems(prev => {
-      const existing = prev.find(item => item.id === product.id);
-      if (existing) {
-        return prev.map(item => item.id === product.id ? { ...item, quantity: item.quantity + 1 } : item);
-      }
-      return [...prev, { id: product.id, name: product.name, price: product.price, quantity: 1 }];
-    });
-    setIsCartOpen(true);
-  };
-
-  const removeFromCart = (id: string) => {
-    setCartItems(prev => prev.filter(item => item.id !== id));
-  };
-
-  const placeOrder = async () => {
+  const handlePlaceOrder = async () => {
     try {
-      // Mock user ID
-      const customerId = 'demo-user-123';
+      const customerId = user?.id ?? 'demo-user-123';
       const items = cartItems.map(item => ({ gadgetId: item.id, quantity: item.quantity }));
       
       const response = await fetch('/api/orders', {
@@ -47,75 +33,127 @@ function App() {
       });
       
       if (response.ok) {
-        setCartItems([]);
+        clearCart();
         setIsCartOpen(false);
-        alert('Deployment Initiated! Your hardware is on the way.');
+        alert(`Hardware deployment confirmed${user ? ` for ${user.name}` : ''}!`);
+      } else {
+        alert('System uplink failed. Please try again.');
       }
     } catch (error) {
       console.error('Finalization failed:', error);
+      alert('System uplink failed. Please try again.');
     }
   };
 
   return (
-    <Router>
-      <div className="min-h-screen bg-slate-900 text-white font-sans">
-        <nav className="border-b border-slate-800 bg-slate-900/80 backdrop-blur-md sticky top-0 z-50">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="flex items-center justify-between h-16">
-              <Link to="/" className="flex items-center gap-2">
-                <span className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-indigo-500">
-                  TechSpark
-                </span>
-              </Link>
-              <div className="flex gap-6 items-center">
-                <Link to="/browse" className="text-slate-300 hover:text-white transition-colors text-sm font-bold uppercase tracking-widest">
-                  Hardware
+    <div className="min-h-screen bg-[#0F1419] text-white selection:bg-blue-500/30 selection:text-white">
+        <nav className="sticky top-0 z-[100] border-b border-white/6 bg-[#0F1419]/92 backdrop-blur-lg">
+        <div className="max-w-7xl mx-auto px-8">
+          <div className="flex items-center justify-between h-20">
+            <Link to="/" className="flex items-center gap-2 group">
+                <div className="p-2 rounded-xl bg-gradient-to-br from-blue-600 via-violet-600 to-pink-500 shadow-lg shadow-blue-950/30 transition-transform group-hover:rotate-6">
+                <Zap size={20} className="text-white" />
+              </div>
+                <span className="display-font text-2xl font-bold tracking-tight text-white uppercase">
+                TechSpark
+              </span>
+            </Link>
+            
+            <div className="hidden md:flex gap-10 items-center">
+              {[
+                { to: '/browse', label: 'Hardware', icon: Database },
+                { to: '/orders', label: 'Acquisitions', icon: LayoutDashboard },
+                { to: '/dashboard', label: 'Metrics', icon: Zap },
+                { to: '/login', label: 'Uplink', icon: User },
+              ].map((link) => (
+                <Link 
+                  key={link.to}
+                  to={link.to} 
+                  className={`flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.2em] transition-colors relative group ${
+                    location.pathname === link.to ? 'text-blue-300' : 'text-gray-500 hover:text-white'
+                  }`}
+                >
+                  <link.icon size={14} />
+                  <span>{link.label}</span>
+                  {location.pathname === link.to && (
+                      <motion.div 
+                        layoutId="nav-glow"
+                        className="absolute -bottom-7 left-0 right-0 h-1 rounded-full bg-gradient-to-r from-blue-400 via-violet-400 to-pink-400 shadow-[0_0_12px_rgba(59,130,246,0.35)]"
+                      />
+                  )}
                 </Link>
-                <Link to="/orders" className="text-slate-300 hover:text-white transition-colors text-sm font-bold uppercase tracking-widest">
-                  Orders
-                </Link>
-                <Link to="/dashboard" className="text-slate-300 hover:text-white transition-colors text-sm font-bold uppercase tracking-widest">
-                  Stats
-                </Link>
-                <Link to="/login" className="text-slate-300 hover:text-white transition-colors text-sm font-bold uppercase tracking-widest">
+              ))}
+
+              {isAuthenticated && user ? (
+                <div className="flex items-center gap-3 rounded-xl border border-white/8 bg-white/5 px-4 py-2">
+                  <div className="flex flex-col text-right">
+                    <span className="text-[10px] uppercase tracking-[0.25em] text-blue-300">{user.role}</span>
+                    <span className="text-sm font-bold text-white">{user.name}</span>
+                  </div>
+                  <button
+                    onClick={() => {
+                      logout();
+                      navigate('/');
+                    }}
+                    className="rounded-lg border border-white/10 px-3 py-2 text-xs font-black uppercase tracking-widest text-gray-300 hover:text-white hover:bg-white/10 transition-colors"
+                  >
+                    Logout
+                  </button>
+                </div>
+              ) : (
+                <Link
+                  to="/login"
+                  className="rounded-xl border border-blue-500/20 bg-blue-500/10 px-4 py-2 text-xs font-black uppercase tracking-widest text-blue-200 hover:bg-blue-500/20 transition-colors"
+                >
                   Login
                 </Link>
-                <button 
-                  onClick={() => setIsCartOpen(true)}
-                  className="p-2 bg-blue-500/10 text-blue-400 rounded-lg hover:bg-blue-500/20 transition-colors relative"
-                >
-                  <FiShoppingCart size={20} />
-                  {cartItems.length > 0 && (
-                    <span className="absolute -top-1 -right-1 w-4 h-4 bg-blue-500 text-white text-[10px] flex items-center justify-center rounded-full font-bold">
-                      {cartItems.reduce((acc, item) => acc + item.quantity, 0)}
-                    </span>
-                  )}
-                </button>
-              </div>
+              )}
+
+              <motion.button 
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                onClick={() => setIsCartOpen(true)}
+                className="relative rounded-xl border border-white/8 bg-white/5 p-3 text-white transition-all hover:bg-white/[0.08]"
+              >
+                <ShoppingCart size={18} className="text-gray-200" />
+                {totalItems > 0 && (
+                  <span className="absolute -top-2 -right-2 flex items-center justify-center rounded-md bg-gradient-to-r from-blue-600 to-violet-600 px-1.5 py-0.5 text-[10px] font-black text-white shadow-lg shadow-blue-950/30">
+                    {totalItems}
+                  </span>
+                )}
+              </motion.button>
             </div>
           </div>
-        </nav>
-        
-        <main>
-          <Routes>
+        </div>
+      </nav>
+      
+      <main>
+        <AnimatePresence mode="wait">
+          <Routes location={location} key={location.pathname}>
             <Route path="/" element={<Home />} />
-            <Route path="/browse" element={<Browse onAddToCart={addToCart} />} />
+            <Route path="/browse" element={<Browse />} />
             <Route path="/login" element={<Login />} />
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/orders" element={<OrderHistory />} />
           </Routes>
-        </main>
+        </AnimatePresence>
+      </main>
 
-        <CartDrawer 
-          isOpen={isCartOpen} 
-          onClose={() => setIsCartOpen(false)} 
-          items={cartItems}
-          onRemove={removeFromCart}
-          onPlaceOrder={placeOrder}
-        />
-      </div>
-    </Router>
+      <CartDrawer 
+        isOpen={isCartOpen} 
+        onClose={() => setIsCartOpen(false)} 
+        onCheckout={handlePlaceOrder}
+      />
+    </div>
   );
 }
 
-export default App;
+export default function App() {
+  return (
+    <AuthProvider>
+      <Router>
+        <AppContent />
+      </Router>
+    </AuthProvider>
+  );
+}

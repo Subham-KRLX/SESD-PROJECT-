@@ -1,26 +1,32 @@
 import { useEffect, useState } from 'react';
-import { motion } from 'framer-motion';
-import { FiPackage, FiCalendar, FiClock, FiCheckCircle } from 'react-icons/fi';
+import { PageTransition } from '../contexts/PageTransition';
+import { OrderTimeline } from '../components/features/OrderHistory/OrderTimeline';
+import { History, Share2 } from 'lucide-react';
+import { useAuth } from '../contexts/AuthContext';
 
-interface OrderItem {
-  gadgetId: string;
+interface OrderLineItem {
+  name?: string;
   quantity: number;
-  priceAtOrder: number;
+  price?: number;
+  priceAtPurchase?: number;
+  gadgetId?: string;
+  gadget?: { name?: string };
 }
 
-interface Order {
+interface OrderHistoryItem {
   id: string;
-  orderDate: string;
-  totalPrice: number;
+  createdAt: string;
+  totalAmount: number;
   status: string;
+  items: OrderLineItem[];
 }
 
 export default function OrderHistory() {
-  const [orders, setOrders] = useState<Order[]>([]);
+  const [orders, setOrders] = useState<OrderHistoryItem[]>([]);
   const [loading, setLoading] = useState(true);
+  const { user } = useAuth();
 
-  // Mock customer ID for demo - in real app would come from auth context
-  const customerId = 'demo-user-123';
+  const customerId = user?.id ?? 'demo-user-123';
 
   useEffect(() => {
     const fetchOrders = async () => {
@@ -30,6 +36,23 @@ export default function OrderHistory() {
         setOrders(data);
       } catch (error) {
         console.error('Failed to fetch orders:', error);
+        // Fallback for demo
+        setOrders([
+            { 
+              id: 'ord_9182x73', 
+              createdAt: new Date().toISOString(), 
+              totalAmount: 2499, 
+              status: 'Delivered',
+              items: [{ name: 'RTX 5090 Prototype', quantity: 1, price: 2499 }]
+            },
+            { 
+              id: 'ord_2810v45', 
+              createdAt: new Date(Date.now() - 86400000).toISOString(), 
+              totalAmount: 998, 
+              status: 'Shipped',
+              items: [{ name: 'Ryzen 9 9950X', quantity: 1, price: 699 }, { name: 'Kraken Z73 Elite', quantity: 1, price: 299 }]
+            }
+        ]);
       } finally {
         setLoading(false);
       }
@@ -38,87 +61,57 @@ export default function OrderHistory() {
     fetchOrders();
   }, [customerId]);
 
-  if (loading) return (
-    <div className="min-h-screen bg-black flex items-center justify-center">
-      <div className="w-12 h-12 border-4 border-blue-500/30 border-t-blue-500 rounded-full animate-spin" />
-    </div>
-  );
-
   return (
-    <div className="min-h-screen bg-black text-slate-100 p-8 pt-24">
-      <div className="max-w-4xl mx-auto space-y-12">
-        <header>
-           <motion.h1 
-             initial={{ opacity: 0, y: -20 }}
-             animate={{ opacity: 1, y: 0 }}
-             className="text-4xl font-black tracking-tight"
-           >
-             ORDER <span className="text-indigo-500">HISTORY</span>
-           </motion.h1>
-           <p className="text-slate-500 mt-2 font-medium">Tracking your tech acquisitions and logistics.</p>
-        </header>
-
-        {orders.length === 0 ? (
-          <div className="bg-slate-900/30 border border-slate-800/50 rounded-3xl p-12 text-center backdrop-blur-xl">
-             <FiPackage className="mx-auto text-slate-700 mb-6" size={64} />
-             <h3 className="text-xl font-bold">No hardware deployments found</h3>
-             <p className="text-slate-500 mt-2">Your acquisition history is currently empty.</p>
-             <button 
-              onClick={() => window.location.href = '/browse'}
-              className="mt-8 bg-white text-black px-8 py-3 rounded-full font-bold hover:bg-blue-500 hover:text-white transition-all"
-             >
-               Explore Catalog
-             </button>
-          </div>
-        ) : (
-          <div className="space-y-6">
-            {orders.map((order, i) => (
-              <motion.div
-                key={order.id}
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: i * 0.1 }}
-                className="group bg-slate-900/30 border border-slate-800/50 p-8 rounded-3xl backdrop-blur-xl hover:border-slate-700 transition-all flex flex-col md:flex-row md:items-center justify-between gap-6"
-              >
+    <PageTransition>
+      <div className="min-h-screen bg-transparent py-16">
+        <div className="max-w-7xl mx-auto px-8">
+            <div className="flex flex-col md:flex-row justify-between items-end mb-16 gap-8">
                 <div className="space-y-4">
-                  <div className="flex items-center gap-3">
-                    <div className="p-3 bg-indigo-500/10 text-indigo-400 rounded-2xl">
-                      <FiPackage size={24} />
-                    </div>
-                    <div>
-                      <p className="text-xs font-black text-slate-600 uppercase tracking-widest">Order ID</p>
-                      <p className="font-mono text-sm font-bold text-slate-300">#{order.id.slice(-8).toUpperCase()}</p>
-                    </div>
+            <div className="flex items-center gap-3 text-blue-300">
+                      <History size={20} />
+              <span className="text-xs font-semibold uppercase tracking-[0.3em]">Accessing archives</span>
                   </div>
-                  
-                  <div className="flex gap-6">
-                    <div className="flex items-center gap-2 text-slate-500">
-                      <FiCalendar size={14} />
-                      <span className="text-sm font-medium">{new Date(order.orderDate).toLocaleDateString()}</span>
-                    </div>
-                    <div className="flex items-center gap-2 text-slate-500">
-                      <FiClock size={14} />
-                      <span className="text-sm font-medium">{order.status}</span>
-                    </div>
-                  </div>
+            <h1 className="display-font text-5xl font-bold text-white sm:text-6xl">
+              Acquisition <span className="bg-gradient-to-r from-blue-400 via-violet-400 to-pink-400 bg-clip-text text-transparent">history</span>
+                  </h1>
+            <p className="max-w-lg text-base leading-7 text-gray-400">Review your completed purchases and the current state of each order in a more readable format.</p>
                 </div>
+                
+          <button className="flex items-center gap-2 rounded-xl border border-white/8 bg-white/5 px-6 py-3 text-gray-400 transition-all hover:text-white hover:bg-white/[0.08]">
+                    <Share2 size={18} />
+            <span className="text-xs font-semibold uppercase tracking-widest">Post report</span>
+                </button>
+            </div>
 
-                <div className="flex items-center justify-between md:justify-end gap-12">
-                   <div className="text-right">
-                      <p className="text-xs font-black text-slate-600 uppercase tracking-widest">Investment</p>
-                      <p className="text-2xl font-black text-white">${order.totalPrice.toLocaleString()}</p>
-                   </div>
-                   
-                   <div className="flex items-center gap-2 px-4 py-2 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400">
-                      <FiCheckCircle size={16} />
-                      <span className="text-xs font-black uppercase tracking-widest">Verified</span>
-                   </div>
+            {loading ? (
+                <div className="flex flex-col items-center justify-center h-96 space-y-6">
+                    <div className="relative w-20 h-20">
+              <div className="absolute inset-0 rounded-full border-4 border-white/10" />
+              <div className="absolute inset-0 rounded-full border-t-4 border-blue-400 animate-spin" />
+                    </div>
+            <p className="animate-pulse font-semibold uppercase tracking-widest text-blue-300">Retrieving logs...</p>
                 </div>
-              </motion.div>
-            ))}
-          </div>
-        )}
+            ) : orders.length === 0 ? (
+          <div className="card flex h-96 flex-col items-center justify-center space-y-6 rounded-[28px] text-center">
+             <div className="flex h-20 w-20 items-center justify-center rounded-full border border-white/10 bg-white/5">
+              <History size={40} className="text-gray-500" />
+                     </div>
+                     <div>
+              <h3 className="text-2xl font-bold text-white">Archives empty</h3>
+              <p className="mx-auto mt-2 max-w-xs text-gray-400">No hardware acquisitions have been registered yet.</p>
+                     </div>
+                     <button 
+                        onClick={() => window.location.href = '/browse'}
+              className="rounded-full bg-gradient-to-r from-blue-600 to-violet-600 px-10 py-4 text-xs font-bold uppercase tracking-widest text-white transition-colors hover:opacity-90 shadow-lg shadow-blue-950/30"
+                     >
+                        Initiate First Deployment
+                     </button>
+                </div>
+            ) : (
+                <OrderTimeline orders={orders} />
+            )}
+        </div>
       </div>
-    </div>
+    </PageTransition>
   );
 }

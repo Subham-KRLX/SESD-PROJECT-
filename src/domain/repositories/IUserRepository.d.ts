@@ -1,8 +1,0 @@
-import { User } from '../entities/User.js';
-export interface IUserRepository {
-    findById(id: string): Promise<User | null>;
-    findByEmail(email: string): Promise<User | null>;
-    save(user: User): Promise<void>;
-    listVendors(): Promise<User[]>;
-}
-//# sourceMappingURL=IUserRepository.d.ts.map
