@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion';
-import { Heart, ShoppingCart, Eye } from 'lucide-react';
+import { ShoppingCart, Eye, Layers } from 'lucide-react';
 import { useCartStore } from '../../../store/cartStore';
 
 interface GadgetCardModel {

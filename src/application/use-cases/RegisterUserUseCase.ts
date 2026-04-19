@@ -15,7 +15,7 @@ export class RegisterUserUseCase {
     }
 
     const userId = randomUUID();
-    const passwordHash = hashPassword(data.password);
+    const passwordHash = await hashPassword(data.password);
     
     let newUser;
     if (data.role === 'VENDOR') {

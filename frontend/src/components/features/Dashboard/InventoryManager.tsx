@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Plus, Package, Edit2, Share2, Trash2 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { apiClient } from '../utils/apiClient';
+import { apiClient } from '../../../utils/apiClient';
 
 export function InventoryManager() {
   const [showAddModal, setShowAddModal] = useState(false);

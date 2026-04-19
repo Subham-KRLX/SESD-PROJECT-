@@ -1,4 +1,5 @@
 import { PrismaClient } from '@prisma/client';
+import { hashPassword } from '../src/domain/entities/User.js';
 const prisma = new PrismaClient();
 async function main() {
     console.log('🌱 Seeding TechSpark database...');
@@ -20,7 +21,7 @@ async function main() {
         create: {
             fullName: 'Quantum Hardware',
             email: 'vendor@techspark.com',
-            passwordHash: 'hashed_password', // In production, use bcrypt
+            passwordHash: hashPassword('vendor12345'),
             role: 'VENDOR',
             vendorProfile: {
                 create: {

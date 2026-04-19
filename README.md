@@ -48,6 +48,198 @@ Design and modeling references are available in `docs/`:
 - [ER Diagram](docs/ErDiagram.md) – Data model relationships
 - [Class Diagram](docs/classDiagram.md) – OOP class hierarchy and design patterns
 - [Sequence Diagram](docs/sequenceDiagram.md) – Interaction flows and call sequences
+- [Use Case Diagram](docs/useCaseDiagram.md) – User stories and system interactions
+- [Deployment Guide](DEPLOYMENT.md) – Production deployment instructions
+- [Deployment Checklist](DEPLOYMENT-CHECKLIST.md) – Pre/post deployment verification
+
+## Tech Stack
+
+**Backend:**
+- Node.js + Express.js (TypeScript)
+- PostgreSQL + Prisma ORM
+- JWT Authentication
+- Bcrypt password hashing
+- Zod schema validation
+- Clean Architecture pattern
+
+**Frontend:**
+- React 19 + Vite
+- Tailwind CSS 4
+- Framer Motion animations
+- Three.js 3D effects
+- Zustand state management
+- Lucide React icons
+
+**DevOps:**
+- Docker & Docker Compose
+- GitHub Actions CI/CD
+- Multi-stage builds
+- Nginx reverse proxy
+
+## Features
+
+- ✅ User authentication (JWT tokens)
+- ✅ Secure password hashing (bcrypt)
+- ✅ Product catalog with 6+ hardware items
+- ✅ Shopping cart management
+- ✅ Order placement and tracking
+- ✅ Order history with status tracking
+- ✅ Hardware comparison tool
+- ✅ Role-based access control (CUSTOMER, VENDOR, ADMIN)
+- ✅ Input validation & error handling
+- ✅ Responsive design (mobile, tablet, desktop)
+- ✅ Real-time loading states
+- ✅ Smooth animations & transitions
+- ✅ Dashboard analytics
+
+## Getting Started
+
+### Prerequisites
+- Node.js 20.19+ or 22.12+
+- PostgreSQL 14+
+- npm or pnpm
+
+### Backend Setup
+
+```bash
+# Install dependencies
+npm install
+
+# Setup environment variables
+cp .env.example .env.local
+
+# Run database migrations
+npm run db:migrate
+
+# Seed database with sample data
+npm run db:seed
+
+# Start development server
+npm run dev:backend
+```
+
+### Frontend Setup
+
+```bash
+cd frontend
+
+# Install dependencies
+npm install
+
+# Start development server
+npm run dev
+```
+
+The frontend will be available at `http://localhost:5173` in dev mode.
+
+### Production Build
+
+```bash
+# Build backend
+npm run build
+
+# Build frontend
+cd frontend && npm run build
+
+# Run with Docker
+docker-compose up -d
+```
+
+## Project Structure
+
+```
+SESD-PROJECT-/
+├── src/                           # Backend source
+│   ├── domain/                    # OOP entities, repositories, strategies
+│   ├── application/               # Use cases (business logic)
+│   ├── infrastructure/            # Repositories, database, seed
+│   └── index.ts                   # Express app & routes
+├── frontend/                      # React frontend
+│   ├── src/
+│   │   ├── components/           # Reusable UI components
+│   │   ├── pages/                # Page components (routing)
+│   │   ├── contexts/             # React contexts (auth, transitions)
+│   │   ├── store/                # Zustand state (cart)
+│   │   └── utils/                # API client, helpers
+│   └── vite.config.ts
+├── prisma/                        # Database schema & migrations
+├── docs/                          # SESD design documentation
+├── .github/workflows/             # CI/CD pipeline
+├── Dockerfile                     # Production image
+├── docker-compose.yml             # Dev environment
+└── docker-compose.prod.yml        # Production setup
+```
+
+## API Endpoints
+
+### Authentication
+- `POST /api/auth/register` – Create new user account
+- `POST /api/auth/login` – Login and get JWT token
+
+### Products
+- `GET /api/gadgets` – Browse all products
+- `GET /api/gadgets/:id` – Get product details
+
+### Orders (Protected)
+- `GET /api/orders/history/:userId` – Get user's order history
+- `POST /api/orders` – Place new order
+
+### Dashboard (Protected)
+- `GET /api/dashboard/stats` – Get analytics data
+
+### System
+- `GET /health` – Health check endpoint
+
+## Environment Variables
+
+See `.env.example` for required variables:
+
+```env
+DATABASE_URL=postgresql://user:password@localhost:5432/techspark
+JWT_SECRET=your-secret-key-here
+NODE_ENV=development
+PORT=3000
+```
+
+## Testing
+
+```bash
+# Run tests
+npm run test
+
+# Run tests with coverage
+npm run test:coverage
+
+# Watch mode
+npm run test:watch
+```
+
+## Deployment
+
+See [DEPLOYMENT.md](DEPLOYMENT.md) for comprehensive deployment guide covering:
+- Docker deployment
+- Systemd service setup
+- Nginx reverse proxy configuration
+- SSL/TLS setup
+- Environment configuration
+- Troubleshooting
+
+## CI/CD
+
+GitHub Actions workflow (`.github/workflows/ci-cd.yml`) includes:
+- TypeScript linting and building
+- Jest test execution
+- Docker image building and pushing
+- Automated staging/production deployment
+- Security scanning with Trivy
+
+## License
+
+MIT
+
+## Author
+
+TechSpark Development Team
 - [Use Case Diagram](docs/useCaseDiagram.md) – Actor behaviors and system functionality
 
 ## Technology Stack

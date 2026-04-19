@@ -1,24 +1,38 @@
 import { useEffect, useState } from 'react';
 import { PageTransition } from '../contexts/PageTransition';
 import { HardwareGrid } from '../components/features/Catalog/HardwareGrid';
-import { Terminal, Search, Filter, Layers, X, Info } from 'lucide-react';
+import { Terminal, Search, Layers, X } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { apiClient } from '../utils/apiClient';
 
 export default function Browse() {
   const [gadgets, setGadgets] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [compList, setCompList] = useState<any[]>([]);
   const [showCompModal, setShowCompModal] = useState(false);
 
   useEffect(() => {
     const fetchGadgets = async () => {
       try {
+        setLoading(true);
+        setError(null);
+        console.log('Fetching gadgets...');
         const response = await apiClient.fetch('/api/gadgets');
-        if (!response.ok) throw new Error('System failure');
+        console.log('Response status:', response.status);
+        
+        if (!response.ok) {
+          throw new Error(`HTTP ${response.status}: System failure`);
+        }
+        
         const data = await response.json();
+        console.log('Gadgets fetched:', data.length);
         setGadgets(data);
       } catch (err: any) {
+        console.error('Error fetching gadgets:', err);
+        setError(err.message);
+        
+        // Fallback data
         setGadgets([
           { id: '1', name: 'RTX 5090 Prototype', manufacturer: 'QuantumTech', price: 2499, stockQty: 5, techSpecs: '32GB GDDR7, Blackwell Architecture', image: 'https://images.unsplash.com/photo-1591488320449-011701bb6704?auto=format&fit=crop&q=80&w=1000' },
           { id: '2', name: 'Ryzen 9 9950X', manufacturer: 'QuantumTech', price: 699, stockQty: 15, techSpecs: '16 Cores, 32 Threads, 5.8GHz', image: 'https://images.unsplash.com/photo-1591488320449-011701bb6704?auto=format&fit=crop&q=80&w=1000' },
@@ -61,6 +75,26 @@ export default function Browse() {
                 </div>
             </div>
           </div>
+
+          {loading ? (
+            <div className="flex items-center justify-center min-h-96">
+              <div className="text-center">
+                <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-blue-400 mb-4"></div>
+                <p className="text-gray-400">Loading hardware catalog...</p>
+              </div>
+            </div>
+          ) : error ? (
+            <div className="flex items-center justify-center min-h-96">
+              <div className="text-center">
+                <p className="text-red-400 mb-4">⚠️ {error}</p>
+                <p className="text-gray-400">Showing cached fallback data...</p>
+              </div>
+            </div>
+          ) : gadgets.length === 0 ? (
+            <div className="flex items-center justify-center min-h-96">
+              <p className="text-gray-400">No hardware found</p>
+            </div>
+          ) : null}
 
           <HardwareGrid gadgets={gadgets} onCompare={toggleCompare} compList={compList} />
 

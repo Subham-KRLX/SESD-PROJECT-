@@ -1,7 +1,12 @@
-import crypto from 'crypto';
+import bcrypt from 'bcrypt';
 
-export function hashPassword(password: string): string {
-  return crypto.createHash('sha256').update(password).digest('hex');
+export async function hashPassword(password: string): Promise<string> {
+  const saltRounds = 10;
+  return bcrypt.hash(password, saltRounds);
+}
+
+export async function verifyPassword(password: string, hash: string): Promise<boolean> {
+  return bcrypt.compare(password, hash);
 }
 
 /**
@@ -16,7 +21,7 @@ export abstract class User {
     public readonly role: 'CUSTOMER' | 'VENDOR' | 'ADMIN'
   ) {}
 
-  abstract authenticate(password: string): boolean;
+  abstract authenticate(password: string): Promise<boolean>;
 
   toJSON() {
     return {
@@ -50,8 +55,8 @@ export class TechCustomer extends User {
     super(id, name, email, passwordHash, 'CUSTOMER');
   }
 
-  authenticate(password: string): boolean {
-    return this.passwordHash === hashPassword(password);
+  async authenticate(password: string): Promise<boolean> {
+    return verifyPassword(password, this.passwordHash);
   }
 }
 
@@ -70,8 +75,8 @@ export class GadgetVendor extends User {
     super(id, name, email, passwordHash, 'VENDOR');
   }
 
-  authenticate(password: string): boolean {
-    return this.passwordHash === hashPassword(password);
+  async authenticate(password: string): Promise<boolean> {
+    return verifyPassword(password, this.passwordHash);
   }
 
   override toJSON() {
@@ -96,8 +101,8 @@ export class SystemAdmin extends User {
     super(id, name, email, passwordHash, 'ADMIN');
   }
 
-  authenticate(password: string): boolean {
-    return this.passwordHash === hashPassword(password);
+  async authenticate(password: string): Promise<boolean> {
+    return verifyPassword(password, this.passwordHash);
   }
 
   verifyVendor(vendor: GadgetVendor): void {

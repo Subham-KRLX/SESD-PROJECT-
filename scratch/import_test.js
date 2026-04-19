@@ -1,0 +1,23 @@
+import 'dotenv/config';
+import express from 'express';
+import cors from 'cors';
+import path from 'path';
+import { fileURLToPath } from 'url';
+import { prisma } from './src/infrastructure/database/client.js';
+import { PlaceOrderUseCase } from './src/application/use-cases/PlaceOrderUseCase.js';
+import { SubmitTechnicalReviewUseCase } from './src/application/use-cases/SubmitTechnicalReviewUseCase.js';
+import { RegisterUserUseCase } from './src/application/use-cases/RegisterUserUseCase.js';
+import { AuthenticateUserUseCase } from './src/application/use-cases/AuthenticateUserUseCase.js';
+import { BrowseGadgetsUseCase } from './src/application/use-cases/BrowseGadgetsUseCase.js';
+import { GetOrderHistoryUseCase } from './src/application/use-cases/GetOrderHistoryUseCase.js';
+import { GetDashboardStatsUseCase } from './src/application/use-cases/GetDashboardStatsUseCase.js';
+import { GetGadgetByIdUseCase } from './src/application/use-cases/GetGadgetByIdUseCase.js';
+import { CreateGadgetUseCase } from './src/application/use-cases/CreateGadgetUseCase.js';
+import { UpdateGadgetInventoryUseCase } from './src/application/use-cases/UpdateGadgetInventoryUseCase.js';
+import { ManageCategoriesUseCase } from './src/application/use-cases/ManageCategoriesUseCase.js';
+import { PrismaUserRepository } from './src/infrastructure/repositories/PrismaUserRepository.js';
+import { PrismaGadgetRepository } from './src/infrastructure/repositories/PrismaGadgetRepository.js';
+import { PrismaOrderRepository } from './src/infrastructure/repositories/PrismaOrderRepository.js';
+import { PrismaReviewRepository } from './src/infrastructure/repositories/PrismaReviewRepository.js';
+console.log('All imports succeeded!');
+//# sourceMappingURL=import_test.js.map

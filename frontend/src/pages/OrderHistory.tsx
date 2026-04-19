@@ -25,14 +25,30 @@ interface OrderHistoryItem {
 export default function OrderHistory() {
   const [orders, setOrders] = useState<OrderHistoryItem[]>([]);
   const [loading, setLoading] = useState(true);
-  const { user } = useAuth();
+  const { user, token } = useAuth();
 
   const customerId = user?.id ?? 'demo-user-123';
 
   useEffect(() => {
     const fetchOrders = async () => {
       try {
-        const response = await apiClient.fetch(`/api/orders/history/${customerId}`);
+        const headers: HeadersInit = {
+          'Content-Type': 'application/json'
+        };
+        
+        // Add JWT token if available
+        if (token) {
+          headers['Authorization'] = `Bearer ${token}`;
+        }
+        
+        const response = await apiClient.fetch(`/api/orders/history/${customerId}`, {
+          headers
+        });
+        
+        if (!response.ok) {
+          throw new Error(`HTTP ${response.status}: Failed to fetch orders`);
+        }
+        
         const data = await response.json();
         setOrders(data);
       } catch (error) {

@@ -11,12 +11,20 @@ export class ManageCategoriesUseCase {
 
   async create(name: string, description?: string): Promise<string> {
     const id = crypto.randomUUID();
-    await this.categoryRepository.save({ id, name, description });
+    const categoryData: { id: string; name: string; description?: string } = { id, name };
+    if (description !== undefined) {
+      categoryData.description = description;
+    }
+    await this.categoryRepository.save(categoryData);
     return id;
   }
 
   async update(id: string, name: string, description?: string): Promise<void> {
-    await this.categoryRepository.update({ id, name, description });
+    const categoryData: { id: string; name: string; description?: string } = { id, name };
+    if (description !== undefined) {
+      categoryData.description = description;
+    }
+    await this.categoryRepository.update(categoryData);
   }
 
   async delete(id: string): Promise<void> {

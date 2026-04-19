@@ -26,7 +26,7 @@ async function main() {
     create: {
       email: 'vendor@quantumtech.com',
       fullName: 'QuantumTech Logistics',
-      passwordHash: hashPassword('vendor12345'),
+      passwordHash: await hashPassword('vendor12345'),
       role: 'VENDOR'
     }
   });
@@ -84,7 +84,7 @@ async function main() {
       id: 'demo-user-123',
       email: 'demo-user-123@techspark.com',
       fullName: 'Hardware Enthusiast',
-      passwordHash: hashPassword('demo12345'),
+      passwordHash: await hashPassword('demo12345'),
       role: 'CUSTOMER'
     }
   });

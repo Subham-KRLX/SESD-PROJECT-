@@ -3,7 +3,7 @@ import { PageTransition } from '../contexts/PageTransition';
 import { HardwareDashboard } from '../components/features/Dashboard/HardwareDashboard';
 import { InventoryManager } from '../components/features/Dashboard/InventoryManager';
 import { useAuth } from '../contexts/AuthContext';
-import { BarChart3, Box, Shield } from 'lucide-react';
+import { BarChart3, Box } from 'lucide-react';
 import { apiClient } from '../utils/apiClient';
 
 export default function Dashboard() {
