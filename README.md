@@ -31,7 +31,7 @@ cd frontend && npm install && npm run dev
 |-------|-----------|
 | **Backend** | Node.js, Express, TypeScript, PostgreSQL, Prisma |
 | **Frontend** | React 19, Vite, Tailwind, Framer Motion |
-| **DevOps** | Docker, GitHub Actions, Nginx |
+| **DevOps** | Docker, Nginx |
 | **Security** | JWT, Bcrypt, Zod validation |
 
 ## Project Structure
