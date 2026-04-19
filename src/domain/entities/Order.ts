@@ -1,5 +1,8 @@
 export type OrderStatus = 'PENDING' | 'PAID' | 'SHIPPED' | 'DELIVERED';
 
+/**
+ * A specific hardware asset within an acquisition request
+ */
 export class OrderItem {
   constructor(
     public readonly gadgetId: string,
@@ -21,6 +24,9 @@ export class OrderItem {
   }
 }
 
+/**
+ * Orchestrates the acquisition and deployment of hardware assets
+ */
 export class Order {
   private _status: OrderStatus = 'PENDING';
 
@@ -42,7 +48,7 @@ export class Order {
   }
 
   updateStatus(newStatus: OrderStatus): void {
-    // Basic status progression logic
+    // Progress the hardware through the deployment pipeline
     this._status = newStatus;
   }
 

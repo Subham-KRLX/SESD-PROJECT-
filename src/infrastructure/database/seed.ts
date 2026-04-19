@@ -6,7 +6,7 @@ const prisma = new PrismaClient();
 async function main() {
   console.log('--- SYSTEM INITIALIZATION: HARDWARE SEEDING ---');
 
-  // 1. Create Categories
+  // Establish the technical hardware categories
   const gpuCat = await prisma.category.upsert({
     where: { name: 'Graphics Processing Units' },
     update: {},
@@ -19,7 +19,7 @@ async function main() {
     create: { name: 'Processors', description: 'Multi-core computing engines.' }
   });
 
-  // 2. Create a Vendor
+  // Initialize a verified hardware vendor
   const vendorUser = await prisma.user.upsert({
     where: { email: 'vendor@quantumtech.com' },
     update: {},
@@ -42,7 +42,7 @@ async function main() {
     }
   });
 
-  // 3. Create Gadgets
+  // Deploy baseline hardware assets
   const gadgets = [
     {
       modelName: 'RTX 5090 Prototype',
@@ -76,10 +76,10 @@ async function main() {
     });
   }
 
-  // 4. Create a Demo Customer & Orders for Dashboard Stats
+  // Initialize demo accounts and historical acquisition data
   const customer = await prisma.user.upsert({
     where: { email: 'demo-user-123@techspark.com' },
-    update: { id: 'demo-user-123' }, // Force ID for demo consistency
+    update: { id: 'demo-user-123' },
     create: {
       id: 'demo-user-123',
       email: 'demo-user-123@techspark.com',
@@ -89,7 +89,7 @@ async function main() {
     }
   });
 
-  // Create some orders
+  // Generate sample acquisition records for analytics
   const allGadgets = await prisma.gadget.findMany();
   
   await prisma.order.create({

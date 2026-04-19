@@ -4,6 +4,9 @@ import { prisma } from '../database/client.js';
 
 type PrismaOrderStatus = 'PENDING' | 'PAID' | 'SHIPPED' | 'DELIVERED';
 
+/**
+ * Manages the persistence and transactional safety of hardware acquisitions
+ */
 export class PrismaOrderRepository implements IOrderRepository {
   private mapToEntity(dbOrder: any): Order {
     const items = dbOrder.items.map((item: any) => 
@@ -23,14 +26,21 @@ export class PrismaOrderRepository implements IOrderRepository {
   }
 
   async save(order: Order): Promise<void> {
+    const stockUpdates = order.items.map(item => ({
+      gadgetId: item.gadgetId,
+      quantity: item.quantity
+    }));
+    await this.saveAtomic(order, stockUpdates);
+  }
+
+  async saveAtomic(order: Order, stockUpdates: { gadgetId: string; quantity: number }[]): Promise<void> {
     await prisma.$transaction(async (tx: any) => {
-      // 1. Create the Order
       await tx.order.create({
         data: {
           id: order.id,
           customerId: order.customerId,
           totalPrice: order.calculateTotal(),
-          status: order.status as PrismaOrderStatus,
+          status: (order.status as string).toUpperCase() as PrismaOrderStatus,
           orderDate: order.orderDate,
           items: {
             create: order.items.map(item => ({
@@ -42,11 +52,10 @@ export class PrismaOrderRepository implements IOrderRepository {
         }
       });
 
-      // 2. Decrement stock for each item
-      for (const item of order.items) {
+      for (const update of stockUpdates) {
         await tx.gadget.update({
-          where: { id: item.gadgetId },
-          data: { stockCount: { decrement: item.quantity } }
+          where: { id: update.gadgetId },
+          data: { stockCount: { decrement: update.quantity } }
         });
       }
     });

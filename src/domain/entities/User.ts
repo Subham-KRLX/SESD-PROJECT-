@@ -4,6 +4,9 @@ export function hashPassword(password: string): string {
   return crypto.createHash('sha256').update(password).digest('hex');
 }
 
+/**
+ * Base identity for anyone accessing the TechSpark network
+ */
 export abstract class User {
   constructor(
     public readonly id: string,
@@ -34,6 +37,9 @@ export abstract class User {
   }
 }
 
+/**
+ * Standard hardware enthusiast and customer
+ */
 export class TechCustomer extends User {
   constructor(
     id: string,
@@ -49,6 +55,9 @@ export class TechCustomer extends User {
   }
 }
 
+/**
+ * Professional vendor responsible for listing hardware assets
+ */
 export class GadgetVendor extends User {
   constructor(
     id: string,
@@ -71,5 +80,27 @@ export class GadgetVendor extends User {
       brandName: this.brandName,
       isVerified: this.isVerified,
     };
+  }
+}
+/**
+ * System administrator with full control over the hardware grid
+ */
+export class SystemAdmin extends User {
+  constructor(
+    id: string,
+    name: string,
+    email: string,
+    passwordHash: string,
+    public accessLevel: number = 1
+  ) {
+    super(id, name, email, passwordHash, 'ADMIN');
+  }
+
+  authenticate(password: string): boolean {
+    return this.passwordHash === hashPassword(password);
+  }
+
+  verifyVendor(vendor: GadgetVendor): void {
+    vendor.isVerified = true;
   }
 }

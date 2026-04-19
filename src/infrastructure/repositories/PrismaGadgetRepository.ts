@@ -8,17 +8,15 @@ export class PrismaGadgetRepository implements IGadgetRepository {
     return new Gadget(
       dbGadget.id,
       dbGadget.modelName,
-      'TechSpark Brand', // The entity doesn't have manufacturer field in constructor as I saw, wait let me check
+      dbGadget.vendor?.brandName || 'TechSpark Brand',
       dbGadget.technicalSpecs,
       Number(dbGadget.price),
       dbGadget.stockCount
     );
   }
 
-  // Refined mapping after verifying Gadget.ts
+  // Maps database records to our technical Gadget entity
   private mapToEntityV2(dbGadget: any): Gadget {
-    // If we assume manufacturer is the Vendor brand name or separate field
-    // Looking at Gadget.ts: (id, modelName, manufacturer, techSpecs, price, stockQty)
     return new Gadget(
       dbGadget.id,
       dbGadget.modelName,
@@ -37,14 +35,51 @@ export class PrismaGadgetRepository implements IGadgetRepository {
     return dbGadget ? this.mapToEntityV2(dbGadget) : null;
   }
 
-  async save(gadget: Gadget): Promise<void> {
-    // Note: This requires a valid vendor and category in the DB.
-    // For this 50% implementation, we'll use a transaction or assume they exist.
-    // We might need to find a default vendor/category if not provided.
-    
-    // For now, let's just implement list and find to keep it moving.
-    // In a real scenario, Gadget entity should probably hold its category/vendor IDs.
+  async save(gadget: Gadget, vendorId?: string): Promise<void> {
+    // Categorize based on technical specification prefixes
+    const categoryName = gadget.techSpecs.startsWith('CPU:') ? 'Processors' : 
+                        gadget.techSpecs.startsWith('GPU:') ? 'Graphics Cards' : 
+                        gadget.techSpecs.startsWith('IoT:') ? 'Smart Hardware' : 'General Tech';
+
+    const category = await prisma.category.upsert({
+      where: { name: categoryName },
+      update: {},
+      create: { name: categoryName }
+    });
+
+    let finalVendorId = vendorId;
+    if (!finalVendorId) {
+      const defaultVendor = await prisma.vendor.findFirst();
+      finalVendorId = defaultVendor?.id;
+    }
+
+    if (!finalVendorId) throw new Error("No vendor associated with listing");
+
+    await prisma.gadget.create({
+      data: {
+        id: gadget.id,
+        modelName: gadget.modelName,
+        technicalSpecs: gadget.techSpecs,
+        price: gadget.price,
+        stockCount: gadget.stockQty,
+        vendorId: finalVendorId,
+        categoryId: category.id
+      }
+    });
   }
+
+  async update(gadget: Gadget): Promise<void> {
+    await prisma.gadget.update({
+      where: { id: gadget.id },
+      data: {
+        modelName: gadget.modelName,
+        technicalSpecs: gadget.techSpecs,
+        price: gadget.price,
+        stockCount: gadget.stockQty
+      }
+    });
+  }
+
 
   async listByCategory(categoryId: string): Promise<Gadget[]> {
     const dbGadgets = await prisma.gadget.findMany({

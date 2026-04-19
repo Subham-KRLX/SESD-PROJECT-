@@ -2,6 +2,9 @@ import { randomUUID } from 'crypto';
 import type { IUserRepository } from '../../domain/repositories/IUserRepository.js';
 import { TechCustomer, GadgetVendor, hashPassword } from '../../domain/entities/User.js';
 
+/**
+ * Registers new personnel (Customers or Vendors) into the TechSpark ecosystem
+ */
 export class RegisterUserUseCase {
   constructor(private userRepository: IUserRepository) {}
 

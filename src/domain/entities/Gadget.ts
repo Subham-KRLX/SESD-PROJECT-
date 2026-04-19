@@ -1,3 +1,6 @@
+/**
+ * Represents a technical hardware asset in the marketplace
+ */
 export class Gadget {
   constructor(
     public readonly id: string,

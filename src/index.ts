@@ -15,6 +15,10 @@ import { PrismaGadgetRepository } from './infrastructure/repositories/PrismaGadg
 import { PrismaOrderRepository } from './infrastructure/repositories/PrismaOrderRepository.js';
 import { PrismaReviewRepository } from './infrastructure/repositories/PrismaReviewRepository.js';
 
+import { CreateGadgetUseCase } from './application/use-cases/CreateGadgetUseCase.js';
+import { UpdateGadgetInventoryUseCase } from './application/use-cases/UpdateGadgetInventoryUseCase.js';
+import { ManageCategoriesUseCase } from './application/use-cases/ManageCategoriesUseCase.js';
+
 const app = express();
 const PORT = process.env.PORT || 3000;
 
@@ -24,13 +28,18 @@ app.get('/health', (req, res) => {
   res.status(200).json({ status: 'TechSpark API is running with Clean Architecture' });
 });
 
-// Repositories
+// Connect the data pipes for hardware entities
 const userRepository = new PrismaUserRepository();
 const gadgetRepository = new PrismaGadgetRepository();
 const orderRepository = new PrismaOrderRepository();
 const reviewRepository = new PrismaReviewRepository();
+const categoryRepository = {
+  async save(c: any) { await (prisma as any).category.create({ data: c }); },
+  async update(c: any) { await (prisma as any).category.update({ where: { id: c.id }, data: c }); },
+  async delete(id: string) { await (prisma as any).category.delete({ where: { id } }); }
+};
 
-// Use Cases
+// Prepare hardware logic modules (use cases)
 const registerUserUseCase = new RegisterUserUseCase(userRepository);
 const authenticateUserUseCase = new AuthenticateUserUseCase(userRepository);
 const browseGadgetsUseCase = new BrowseGadgetsUseCase(gadgetRepository);
@@ -39,8 +48,11 @@ const submitReviewUseCase = new SubmitTechnicalReviewUseCase(gadgetRepository, u
 const getOrderHistoryUseCase = new GetOrderHistoryUseCase(orderRepository);
 const getDashboardStatsUseCase = new GetDashboardStatsUseCase();
 const getGadgetByIdUseCase = new GetGadgetByIdUseCase(gadgetRepository);
+const createGadgetUseCase = new CreateGadgetUseCase(gadgetRepository);
+const updateInventoryUseCase = new UpdateGadgetInventoryUseCase(gadgetRepository);
+const manageCategoriesUseCase = new ManageCategoriesUseCase(categoryRepository);
 
-// Auth Routes
+// Uplink endpoints for user authentication
 app.post('/api/auth/register', async (req, res) => {
   try {
     await registerUserUseCase.execute(req.body);
@@ -59,7 +71,7 @@ app.post('/api/auth/login', async (req, res) => {
   }
 });
 
-// Gadget Routes
+// Endpoints for browsing and managing hardware assets
 app.get('/api/gadgets', async (req, res) => {
   try {
     const gadgets = await browseGadgetsUseCase.execute(req.query);
@@ -78,7 +90,25 @@ app.get('/api/gadgets/:id', async (req, res) => {
   }
 });
 
-// Order Routes
+app.post('/api/gadgets', async (req, res) => {
+  try {
+    const gadget = await createGadgetUseCase.execute(req.body);
+    res.status(201).json(gadget);
+  } catch (error: any) {
+    res.status(400).json({ error: error.message });
+  }
+});
+
+app.put('/api/gadgets/:id', async (req, res) => {
+  try {
+    const gadget = await updateInventoryUseCase.execute({ gadgetId: req.params.id, ...req.body });
+    res.status(200).json(gadget);
+  } catch (error: any) {
+    res.status(400).json({ error: error.message });
+  }
+});
+
+// Processing hardware acquisition workflows
 app.post('/api/orders', async (req, res) => {
   try {
     const order = await placeOrderUseCase.execute(req.body.customerId, req.body.items);
@@ -97,28 +127,22 @@ app.get('/api/orders/history/:customerId', async (req, res) => {
   }
 });
 
-// Review Routes
-app.post('/api/reviews', async (req, res) => {
-  try {
-    const review = await submitReviewUseCase.execute(
-      req.body.customerId,
-      req.body.gadgetId,
-      req.body.rating,
-      req.body.feedbackText
-    );
-    res.status(201).json(review);
-  } catch (error: any) {
-    res.status(400).json({ error: error.message });
-  }
-});
-
-// Admin Routes
+// Admin mission control for system stats and categories
 app.get('/api/admin/dashboard-stats', async (req, res) => {
   try {
     const stats = await getDashboardStatsUseCase.execute();
     res.status(200).json(stats);
   } catch (error: any) {
     res.status(500).json({ error: 'Failed to fetch dashboard stats' });
+  }
+});
+
+app.post('/api/admin/categories', async (req, res) => {
+  try {
+    const id = await manageCategoriesUseCase.create(req.body.name, req.body.description);
+    res.status(201).json({ id });
+  } catch (error: any) {
+    res.status(400).json({ error: error.message });
   }
 });
 

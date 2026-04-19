@@ -9,7 +9,7 @@ export class GetOrderHistoryUseCase {
     
     const orders = await this.orderRepository.listByCustomer(customerId);
     
-    // Sort by date descending
+    // Prioritize recent acquisitions first
     return orders.sort((a, b) => b.orderDate.getTime() - a.orderDate.getTime());
   }
 }

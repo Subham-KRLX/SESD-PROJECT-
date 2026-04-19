@@ -8,6 +8,9 @@ interface OrderItemInput {
   quantity: number;
 }
 
+/**
+ * Manages the atomic acquisition of hardware assets from the catalog
+ */
 export class PlaceOrderUseCase {
   constructor(
     private gadgetRepository: IGadgetRepository,
@@ -16,7 +19,9 @@ export class PlaceOrderUseCase {
 
   async execute(customerId: string, itemsInput: OrderItemInput[]): Promise<Order> {
     const orderItems: OrderItem[] = [];
+    const stockUpdates: { gadgetId: string; quantity: number }[] = [];
 
+    // Verify stock availability for every component in the request
     for (const item of itemsInput) {
       const gadget = await this.gadgetRepository.findById(item.gadgetId);
       if (!gadget) throw new Error("Gadget not found: " + item.gadgetId);
@@ -30,9 +35,7 @@ export class PlaceOrderUseCase {
         gadget.price
       );
       orderItems.push(orderItem);
-
-      gadget.stockQty -= item.quantity;
-      await this.gadgetRepository.updateStock(gadget.id, gadget.stockQty);
+      stockUpdates.push({ gadgetId: gadget.id, quantity: item.quantity });
     }
 
     const order = new Order(
@@ -41,7 +44,8 @@ export class PlaceOrderUseCase {
       orderItems
     );
 
-    await this.orderRepository.save(order);
+    // Finalize the transaction: stock is only deducted if order creation succeeds
+    await this.orderRepository.saveAtomic(order, stockUpdates);
     return order;
   }
 }

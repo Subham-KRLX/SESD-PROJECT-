@@ -45,7 +45,7 @@ export class PrismaUserRepository implements IUserRepository {
       id: user.id,
       fullName: user.name,
       email: user.email,
-      passwordHash: (user as any).passwordHash, // Accessing protected for DB save
+      passwordHash: (user as any).passwordHash,
       role: user.role as PrismaUserRole
     };
 
