@@ -15,7 +15,18 @@ interface GadgetCardModel {
   image?: string;
 }
 
-export function HardwareGrid({ gadgets }: { gadgets: GadgetCardModel[] }) {
+/**
+ * The primary display grid for browsing and comparing hardware components
+ */
+export function HardwareGrid({ 
+  gadgets, 
+  onCompare, 
+  compList = [] 
+}: { 
+  gadgets: GadgetCardModel[], 
+  onCompare?: (g: any) => void,
+  compList?: any[]
+}) {
   const addItem = useCartStore((state) => state.addItem);
 
   const containerVariants = {
@@ -52,6 +63,7 @@ export function HardwareGrid({ gadgets }: { gadgets: GadgetCardModel[] }) {
         const price = Number(gadget.price ?? 0);
         const category = gadget.category || gadget.techSpecs || 'Tech Component';
         const image = gadget.image || `https://source.unsplash.com/featured/800x600?hardware,computer&sig=${gadget.id}`;
+        const isSelected = compList.find(i => i.id === gadget.id);
 
         return (
           <motion.div
@@ -60,7 +72,7 @@ export function HardwareGrid({ gadgets }: { gadgets: GadgetCardModel[] }) {
             whileHover={{ y: -8, transition: { duration: 0.25 } }}
             className="group relative overflow-hidden rounded-[28px] border border-white/8 bg-gradient-to-b from-[#171d2a] to-[#0f1419] shadow-[0_18px_50px_rgba(0,0,0,0.28)] transition-all duration-300 hover:border-white/12"
           >
-            <div className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-blue-500 via-violet-500 to-pink-500 opacity-80" />
+            <div className={`absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-blue-500 via-violet-500 to-pink-500 transition-opacity ${isSelected ? 'opacity-100' : 'opacity-40'}`} />
 
             <div className="relative h-56 overflow-hidden border-b border-white/8 bg-[#0c1118]">
               <img
@@ -91,25 +103,23 @@ export function HardwareGrid({ gadgets }: { gadgets: GadgetCardModel[] }) {
                   <h3 className="text-xl font-semibold leading-tight text-white transition-colors group-hover:text-blue-300">
                     {name}
                   </h3>
-                  <button className="rounded-lg border border-white/8 bg-white/5 p-2 text-gray-400 transition-colors hover:border-white/12 hover:text-white">
+                  <button 
+                    onClick={() => onCompare?.(gadget)}
+                    className={`rounded-lg border p-2 transition-colors ${isSelected ? 'border-blue-500 text-blue-400' : 'border-white/8 bg-white/5 text-gray-400 hover:border-white/12 hover:text-white'}`}
+                  >
                     <Eye size={17} />
                   </button>
                 </div>
 
-                <p className="min-h-12 text-sm leading-6 text-gray-400">
-                  {gadget.techSpecs || gadget.description || 'Selected for performance, reliability, and clean integration.'}
+                <p className="min-h-12 text-sm leading-6 text-gray-400 line-clamp-2">
+                  {gadget.techSpecs || gadget.description || 'Selected for performance.'}
                 </p>
               </div>
 
               <div className="mt-auto space-y-5">
                 <div className="flex items-end justify-between">
                   <div>
-                    <p className="text-[11px] uppercase tracking-[0.28em] text-gray-500">Price</p>
-                    <p className="mt-1 text-3xl font-bold text-white">${price.toFixed(2)}</p>
-                  </div>
-                  <div className="flex items-center gap-2 rounded-full border border-white/8 bg-white/5 px-3 py-1.5 text-xs text-gray-300">
-                    <span className="h-1.5 w-1.5 rounded-full bg-blue-400" />
-                    Trusted listing
+                    <p className="mt-1 text-3xl font-bold text-white">${price.toLocaleString()}</p>
                   </div>
                 </div>
 
@@ -128,14 +138,17 @@ export function HardwareGrid({ gadgets }: { gadgets: GadgetCardModel[] }) {
                     }}
                     className="flex-1 rounded-xl bg-blue-600 px-4 py-3.5 text-sm font-semibold text-white transition-colors hover:bg-blue-500"
                   >
-                    <span className="inline-flex items-center justify-center gap-2">
-                      <ShoppingCart size={17} />
-                      Add to cart
+                    <span className="inline-flex items-center justify-center gap-2 text-xs font-black uppercase tracking-widest">
+                      <ShoppingCart size={15} />
+                      Buy now
                     </span>
                   </motion.button>
 
-                  <button className="rounded-xl border border-white/8 bg-white/5 px-4 py-3.5 text-gray-300 transition-colors hover:border-white/12 hover:bg-white/[0.08] hover:text-white">
-                    <Heart size={17} />
+                  <button 
+                    onClick={() => onCompare?.(gadget)}
+                    className={`rounded-xl border px-4 py-3.5 transition-colors ${isSelected ? 'border-blue-500 bg-blue-500/10 text-blue-300' : 'border-white/8 bg-white/5 text-gray-300 hover:border-white/12 hover:bg-white/[0.08] hover:text-white'}`}
+                  >
+                    <Layers size={17} />
                   </button>
                 </div>
               </div>
