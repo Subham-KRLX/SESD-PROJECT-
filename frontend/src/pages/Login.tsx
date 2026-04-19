@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
+import { apiClient } from '../utils/apiClient';
 
 type AuthApiPayload = {
   token?: string;
@@ -47,7 +48,7 @@ export default function Login() {
 
     try {
       if (isRegistering) {
-        const response = await fetch('/api/auth/register', {
+        const response = await apiClient.fetch('/api/auth/register', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
@@ -68,7 +69,7 @@ export default function Login() {
         }
       }
 
-      const loginResponse = await fetch('/api/auth/login', {
+      const loginResponse = await apiClient.fetch('/api/auth/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password }),

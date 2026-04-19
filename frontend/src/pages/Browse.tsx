@@ -3,6 +3,7 @@ import { PageTransition } from '../contexts/PageTransition';
 import { HardwareGrid } from '../components/features/Catalog/HardwareGrid';
 import { Terminal, Search, Filter, Layers, X, Info } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { apiClient } from '../utils/apiClient';
 
 export default function Browse() {
   const [gadgets, setGadgets] = useState<any[]>([]);
@@ -13,7 +14,7 @@ export default function Browse() {
   useEffect(() => {
     const fetchGadgets = async () => {
       try {
-        const response = await fetch('/api/gadgets');
+        const response = await apiClient.fetch('/api/gadgets');
         if (!response.ok) throw new Error('System failure');
         const data = await response.json();
         setGadgets(data);

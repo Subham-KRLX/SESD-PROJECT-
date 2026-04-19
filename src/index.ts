@@ -1,5 +1,7 @@
-import 'dotenv/config';
 import express from 'express';
+import cors from 'cors';
+import path from 'path';
+import { fileURLToPath } from 'url';
 import { PlaceOrderUseCase } from './application/use-cases/PlaceOrderUseCase.js';
 import { SubmitTechnicalReviewUseCase } from './application/use-cases/SubmitTechnicalReviewUseCase.js';
 
@@ -22,7 +24,15 @@ import { ManageCategoriesUseCase } from './application/use-cases/ManageCategorie
 const app = express();
 const PORT = process.env.PORT || 3000;
 
+// Resolve __dirname for ES Modules
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+app.use(cors());
 app.use(express.json());
+
+// Serve static assets from the frontend build directory
+app.use(express.static(path.join(__dirname, '../frontend/dist')));
 
 app.get('/health', (req, res) => {
   res.status(200).json({ status: 'TechSpark API is running with Clean Architecture' });
@@ -144,6 +154,11 @@ app.post('/api/admin/categories', async (req, res) => {
   } catch (error: any) {
     res.status(400).json({ error: error.message });
   }
+});
+
+// Global catch-all for React SPA routing
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, '../frontend/dist/index.html'));
 });
 
 app.listen(PORT, () => {

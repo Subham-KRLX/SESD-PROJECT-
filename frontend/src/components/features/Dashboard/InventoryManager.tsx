@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Plus, Package, Edit2, Share2, Trash2 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { apiClient } from '../utils/apiClient';
 
 export function InventoryManager() {
   const [showAddModal, setShowAddModal] = useState(false);
@@ -21,7 +22,7 @@ export function InventoryManager() {
   const handleAdd = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const resp = await fetch('/api/gadgets', {
+      const resp = await apiClient.fetch('/api/gadgets', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

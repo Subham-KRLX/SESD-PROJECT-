@@ -3,6 +3,7 @@ import { PageTransition } from '../contexts/PageTransition';
 import { OrderTimeline } from '../components/features/OrderHistory/OrderTimeline';
 import { History, Share2 } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
+import { apiClient } from '../utils/apiClient';
 
 interface OrderLineItem {
   name?: string;
@@ -31,7 +32,7 @@ export default function OrderHistory() {
   useEffect(() => {
     const fetchOrders = async () => {
       try {
-        const response = await fetch(`/api/orders/history/${customerId}`);
+        const response = await apiClient.fetch(`/api/orders/history/${customerId}`);
         const data = await response.json();
         setOrders(data);
       } catch (error) {

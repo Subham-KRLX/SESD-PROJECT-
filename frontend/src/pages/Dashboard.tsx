@@ -4,6 +4,7 @@ import { HardwareDashboard } from '../components/features/Dashboard/HardwareDash
 import { InventoryManager } from '../components/features/Dashboard/InventoryManager';
 import { useAuth } from '../contexts/AuthContext';
 import { BarChart3, Box, Shield } from 'lucide-react';
+import { apiClient } from '../utils/apiClient';
 
 export default function Dashboard() {
   const [stats, setStats] = useState<any>(null);
@@ -14,7 +15,7 @@ export default function Dashboard() {
   useEffect(() => {
     const fetchStats = async () => {
       try {
-        const response = await fetch('/api/admin/dashboard-stats');
+        const response = await apiClient.fetch('/api/admin/dashboard-stats');
         const data = await response.json();
         setStats(data);
       } catch (error) {

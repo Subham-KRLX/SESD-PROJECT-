@@ -11,6 +11,7 @@ import { ShoppingCart, LayoutDashboard, Database, User, Zap } from 'lucide-react
 import { AnimatePresence, motion } from 'framer-motion';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
+import { apiClient } from './utils/apiClient';
 
 function AppContent() {
   const [isCartOpen, setIsCartOpen] = useState(false);
@@ -26,7 +27,7 @@ function AppContent() {
       const customerId = user?.id ?? 'demo-user-123';
       const items = cartItems.map(item => ({ gadgetId: item.id, quantity: item.quantity }));
       
-      const response = await fetch('/api/orders', {
+      const response = await apiClient.fetch('/api/orders', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ customerId, items })
