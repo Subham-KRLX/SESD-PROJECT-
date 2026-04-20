@@ -8,9 +8,11 @@
     "dev:frontend": "cd frontend && npm run dev",
     "dev": "npm run dev:backend & npm run dev:frontend",
     "seed": "node --loader ts-node/esm prisma/seed.ts",
-    "build": "tsc",
-    "build:prod": "tsc && cd frontend && npm ci && npm run build",
+    "build": "npm run build:backend && npm run build:frontend",
+    "build:backend": "tsc",
+    "build:frontend": "cd frontend && npm install && npm run build",
     "start": "node dist/index.js",
+    "postinstall": "prisma generate",
     "test": "jest",
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage",
@@ -23,11 +25,6 @@
     "db:migrate:deploy": "prisma migrate deploy",
     "db:push": "prisma migrate dev --skip-generate",
     "db:studio": "prisma studio",
-    "docker:build": "docker build -t techspark:latest .",
-    "docker:up": "docker-compose up -d",
-    "docker:down": "docker-compose down",
-    "docker:logs": "docker-compose logs -f",
-    "deploy": "bash deploy.sh",
     "validate": "npm run type-check && npm run lint && npm run build && npm run test"
   },
   "repository": {
@@ -42,6 +39,9 @@
     "url": "https://github.com/Subham-KRLX/SESD-PROJECT-/issues"
   },
   "homepage": "https://github.com/Subham-KRLX/SESD-PROJECT-#readme",
+  "engines": {
+    "node": ">=20.19.0"
+  },
   "dependencies": {
     "@prisma/client": "^6.19.2",
     "@types/express": "^5.0.6",

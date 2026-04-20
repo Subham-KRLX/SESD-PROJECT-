@@ -14,8 +14,6 @@ npm run dev:backend
 cd frontend && npm install && npm run dev
 ```
 
-**Backend:** http://localhost:3000 | **Frontend:** http://localhost:5173
-
 ## Features
 
 ✅ User authentication (JWT + bcrypt)  
@@ -31,7 +29,7 @@ cd frontend && npm install && npm run dev
 |-------|-----------|
 | **Backend** | Node.js, Express, TypeScript, PostgreSQL, Prisma |
 | **Frontend** | React 19, Vite, Tailwind, Framer Motion |
-| **DevOps** | Docker, Nginx |
+| **DevOps** | Native Node.js |
 | **Security** | JWT, Bcrypt, Zod validation |
 
 ## Project Structure
@@ -44,8 +42,7 @@ SESD-PROJECT-/
 │   └── infrastructure/ # Database implementations
 ├── frontend/           # React SPA
 ├── docs/              # SESD diagrams & design docs
-├── Dockerfile         # Production image
-└── docker-compose.yml # Development environment
+└── prisma/            # Database schema & migrations
 ```
 
 ## API Endpoints
@@ -66,11 +63,24 @@ cp .env.example .env.local
 # Edit .env.local with your database URL and JWT secret
 ```
 
-## Deploy with Docker
+## Deployment
+TechSpark is ready for Render as a single Node web service. The backend builds the frontend and serves the React app from `frontend/dist`, so no Docker setup is required.
+
+Use these commands on Render:
 
 ```bash
-docker-compose up -d
+npm run build
+npm start
 ```
+
+Required Render environment variables:
+
+```bash
+DATABASE_URL=
+JWT_SECRET=
+```
+
+See [DEPLOYMENT.md](DEPLOYMENT.md) for the full Render setup and [render.yaml](render.yaml) if you want a blueprint deployment.
 
 ## Documentation
 
