@@ -5,17 +5,18 @@ TechSpark is designed to run on Render as a single web service. The Express back
 ## Render Setup
 
 1. Create a new **Web Service** in Render from this repository.
-2. Set the root directory to the repository root.
+2. Leave the root directory empty so Render builds from the repository root.
 3. Use these commands:
 
 ```bash
-npm run build
+npm ci && npm run build
 npm start
 ```
 
 4. Add these environment variables in Render:
 
 ```bash
+NODE_ENV=production
 DATABASE_URL=
 JWT_SECRET=
 ```

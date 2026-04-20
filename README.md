@@ -69,13 +69,14 @@ TechSpark is ready for Render as a single Node web service. The backend builds t
 Use these commands on Render:
 
 ```bash
-npm run build
+npm ci && npm run build
 npm start
 ```
 
 Required Render environment variables:
 
 ```bash
+NODE_ENV=production
 DATABASE_URL=
 JWT_SECRET=
 ```
