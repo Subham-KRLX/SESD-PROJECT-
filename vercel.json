@@ -1,31 +1,17 @@
 {
   "version": 2,
-  "builds": [
+  "rewrites": [
     {
-      "src": "src/index.ts",
-      "use": "@vercel/node"
+      "source": "/api/(.*)",
+      "destination": "/api/index.ts"
     },
     {
-      "src": "frontend/dist/**",
-      "use": "@vercel/static"
-    }
-  ],
-  "routes": [
-    {
-      "src": "/api/(.*)",
-      "dest": "src/index.ts"
+      "source": "/health",
+      "destination": "/api/index.ts"
     },
     {
-      "src": "/health",
-      "dest": "src/index.ts"
-    },
-    {
-      "src": "/assets/(.*)",
-      "dest": "frontend/dist/assets/$1"
-    },
-    {
-      "src": "/(.*)",
-      "dest": "src/index.ts"
+      "source": "/((?!api|assets|favicon.ico).*)",
+      "destination": "/index.html"
     }
   ]
 }
