@@ -19,7 +19,19 @@ async function main() {
     create: { name: 'Processors', description: 'Powerful CPUs for computing' }
   });
 
-  // 2. Create Vendor
+  // 2. Create Demo Customer
+  await prisma.user.upsert({
+    where: { email: 'demo-user-123@techspark.com' },
+    update: {},
+    create: {
+      fullName: 'Demo Customer',
+      email: 'demo-user-123@techspark.com',
+      passwordHash: await hashPassword('demo12345'),
+      role: 'CUSTOMER',
+    }
+  });
+
+  // 3. Create Vendor
   const vendorUser = await prisma.user.upsert({
     where: { email: 'vendor@techspark.com' },
     update: {},
