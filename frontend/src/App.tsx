@@ -65,7 +65,6 @@ function AppContent() {
                 { to: '/browse', label: 'Hardware', icon: Database },
                 { to: '/orders', label: 'Acquisitions', icon: LayoutDashboard },
                 { to: '/dashboard', label: 'Metrics', icon: Zap },
-                { to: '/login', label: 'Uplink', icon: User },
               ].map((link) => (
                 <Link 
                   key={link.to}
@@ -85,30 +84,12 @@ function AppContent() {
                 </Link>
               ))}
 
-              {isAuthenticated && user ? (
-                <div className="flex items-center gap-3 rounded-xl border border-white/8 bg-white/5 px-4 py-2">
-                  <div className="flex flex-col text-right">
-                    <span className="text-[10px] uppercase tracking-[0.25em] text-blue-300">{user.role}</span>
-                    <span className="text-sm font-bold text-white">{user.name}</span>
-                  </div>
-                  <button
-                    onClick={() => {
-                      logout();
-                      navigate('/');
-                    }}
-                    className="rounded-lg border border-white/10 px-3 py-2 text-xs font-black uppercase tracking-widest text-gray-300 hover:text-white hover:bg-white/10 transition-colors"
-                  >
-                    Logout
-                  </button>
+              <div className="flex items-center gap-3 rounded-xl border border-white/8 bg-white/5 px-4 py-2">
+                <div className="flex flex-col text-right">
+                  <span className="text-[10px] uppercase tracking-[0.25em] text-blue-300">{user?.role || 'ADMIN'}</span>
+                  <span className="text-sm font-bold text-white">{user?.name || 'System Operator'}</span>
                 </div>
-              ) : (
-                <Link
-                  to="/login"
-                  className="rounded-xl border border-blue-500/20 bg-blue-500/10 px-4 py-2 text-xs font-black uppercase tracking-widest text-blue-200 hover:bg-blue-500/20 transition-colors"
-                >
-                  Login
-                </Link>
-              )}
+              </div>
 
               <motion.button 
                 whileHover={{ scale: 1.05 }}

@@ -44,10 +44,21 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   }, [session]);
 
+  // Default guest session for open access
+  const defaultSession: AuthSession = {
+    token: 'bypass-auth-token',
+    user: {
+      id: 'demo-user-123',
+      name: 'System Operator',
+      email: 'operator@techspark.com',
+      role: 'ADMIN'
+    }
+  };
+
   const value: AuthContextValue = {
-    user: session?.user ?? null,
-    token: session?.token ?? null,
-    isAuthenticated: Boolean(session),
+    user: session?.user ?? defaultSession.user,
+    token: session?.token ?? defaultSession.token,
+    isAuthenticated: true, // Always true to bypass login screens
     login: (nextSession) => setSession(nextSession),
     logout: () => setSession(null),
   };

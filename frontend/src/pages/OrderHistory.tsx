@@ -32,18 +32,7 @@ export default function OrderHistory() {
   useEffect(() => {
     const fetchOrders = async () => {
       try {
-        const headers: HeadersInit = {
-          'Content-Type': 'application/json'
-        };
-        
-        // Add JWT token if available
-        if (token) {
-          headers['Authorization'] = `Bearer ${token}`;
-        }
-        
-        const response = await apiClient.fetch(`/api/orders/history/${customerId}`, {
-          headers
-        });
+        const response = await apiClient.fetch(`/api/orders/history/${customerId}`);
         
         if (!response.ok) {
           throw new Error(`HTTP ${response.status}: Failed to fetch orders`);

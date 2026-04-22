@@ -3,13 +3,8 @@
  */
 
 const getApiUrl = (): string => {
-  // In development (Vite with proxy), use relative /api
-  if (typeof window !== 'undefined' && window.location.hostname === 'localhost') {
-    return '';
-  }
-  
-  // In production, use environment variable or default
-  return import.meta.env.VITE_API_URL || '';
+  // Always use relative paths so the platform (Vercel/Render) handles routing
+  return '';
 };
 
 export const apiClient = {
