@@ -3,7 +3,7 @@ services:
     name: techspark
     env: node
     plan: free
-    buildCommand: npm ci && npm run build
+    buildCommand: npm ci && npm run build && npx prisma migrate deploy && npm run seed
     startCommand: npm start
     healthCheckPath: /health
     autoDeploy: true

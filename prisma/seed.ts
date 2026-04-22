@@ -26,7 +26,7 @@ async function main() {
     create: {
       fullName: 'Quantum Hardware',
       email: 'vendor@techspark.com',
-      passwordHash: hashPassword('vendor12345'),
+      passwordHash: await hashPassword('vendor12345'),
       role: 'VENDOR',
       vendorProfile: {
         create: {
