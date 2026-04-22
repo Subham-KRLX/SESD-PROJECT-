@@ -25,7 +25,7 @@ interface OrderHistoryItem {
 export default function OrderHistory() {
   const [orders, setOrders] = useState<OrderHistoryItem[]>([]);
   const [loading, setLoading] = useState(true);
-  const { user, token } = useAuth();
+  const { user } = useAuth();
 
   const customerId = user?.id ?? 'demo-user-123';
 

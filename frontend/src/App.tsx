@@ -7,10 +7,9 @@ import OrderHistory from './pages/OrderHistory.js';
 import { CartDrawer } from './components/features/Cart/CartDrawer';
 import { useCartStore } from './store/cartStore';
 import { useState } from 'react';
-import { ShoppingCart, LayoutDashboard, Database, User, Zap } from 'lucide-react';
+import { ShoppingCart, LayoutDashboard, Database, Zap } from 'lucide-react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
-import { useNavigate } from 'react-router-dom';
 import { apiClient } from './utils/apiClient';
 
 function AppContent() {
@@ -19,8 +18,7 @@ function AppContent() {
   const cartItems = useCartStore((state) => state.items);
   const clearCart = useCartStore((state) => state.clearCart);
   const location = useLocation();
-  const navigate = useNavigate();
-  const { user, logout, isAuthenticated } = useAuth();
+  const { user } = useAuth();
 
   const handlePlaceOrder = async () => {
     try {
