@@ -1,5 +1,7 @@
 # TechSpark
 
+![TechSpark Hero](docs/screenshots/hero.png)
+
 A production-ready full-stack tech hardware marketplace built with **Clean Architecture**, **React**, **Express**, and **PostgreSQL**.
 
 ## Quick Start
@@ -15,6 +17,8 @@ cd frontend && npm install && npm run dev
 ```
 
 ## Features
+
+![TechSpark Features](docs/screenshots/features.png)
 
 ✅ User authentication (JWT + bcrypt)  
 ✅ Product catalog & shopping cart  
@@ -97,6 +101,14 @@ See [DEPLOYMENT.md](DEPLOYMENT.md) for the full Render setup and [render.yaml](r
 npm run test              # Run tests
 npm run test:coverage     # With coverage report
 ```
+
+## Interface & Experience
+
+### Acquisition History
+![Acquisition History](docs/screenshots/acquisition.png)
+
+### Order Tracking
+![Order Tracking](docs/screenshots/deployment.png)
 
 ## License
 
