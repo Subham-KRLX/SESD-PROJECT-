@@ -3,7 +3,6 @@
 TechSpark is designed to run on Render as a single web service. The Express backend serves the built React frontend from `frontend/dist`, so the deployment does not require Docker.
 
 ## Render Setup
-
 1. Create a new **Web Service** in Render from this repository.
 2. Leave the root directory empty so Render builds from the repository root.
 3. Use these commands:
